@@ -17,7 +17,6 @@ const Home: React.FC = () => {
     <p>
       Please
       <button onClick={replace("/signin")}>Sign in</button>
-      <button>Sign in</button>
     </p>
   );
   return <div className="Home">{status}</div>;

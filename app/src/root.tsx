@@ -3,12 +3,8 @@ import App from "./view/App";
 import * as ReactRedux from "react-redux";
 import * as Redux from "redux";
 import ReduxThunk from "redux-thunk";
-// import * as ReduxHistory from "./lib/redux-history";
-import {
-  rootReducer,
-  // historyMiddleware,
-  Store,
-} from "./store";
+import * as ReduxHistory from "./lib/redux-history";
+import { rootReducer, historyMiddleware, Store } from "./store";
 
 declare global {
   interface Window {
@@ -18,8 +14,8 @@ declare global {
 const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
 const middleware = composeEnhancers(
-  Redux.applyMiddleware(ReduxThunk)
-  // Redux.applyMiddleware(historyMiddleware)
+  Redux.applyMiddleware(ReduxThunk),
+  Redux.applyMiddleware(historyMiddleware)
 );
 
 export const createRootElement = (): ReactElement => {
@@ -29,7 +25,7 @@ export const createRootElement = (): ReactElement => {
 
 export const setupStore = (): Store => {
   const store = Redux.createStore(rootReducer, middleware);
-  // ReduxHistory.listen(store);
+  ReduxHistory.listen(store);
   return store;
 };
 

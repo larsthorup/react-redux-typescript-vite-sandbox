@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-// import userEvent from '@testing-library/user-event';
+import userEvent from "@testing-library/user-event";
 
 import { expect } from "chai";
 
@@ -11,8 +11,8 @@ describe("App", () => {
     const getLoggedOutStatus = () => screen.getByText("Please");
     // const getLoggedInStatus = () => screen.getByText('Lars');
     // const getLogoutButton = () => screen.getByText('Logout');
-    // const getLoginButton = () => screen.getByText('Login');
-    // const getSigninButton = () => screen.getByText('Sign in');
+    const getLoginButton = () => screen.getByText("Login");
+    const getSigninButton = () => screen.getByText("Sign in");
     // const getProfileButton = () => screen.getByText('Profile');
     // const getPeopleButton = () => screen.getByText('People');
 
@@ -22,22 +22,22 @@ describe("App", () => {
     // Then: is logged out
     expect(getLoggedOutStatus()).to.exist;
 
-    // // When: navigate to sign in
-    // userEvent.click(getSigninButton());
+    // When: navigate to sign in
+    userEvent.click(getSigninButton());
 
-    // // When: login with wrong password
-    // const usernameInput = screen.getByPlaceholderText("User name");
-    // const passwordInput = screen.getByPlaceholderText("Password (use 'p')");
-    // userEvent.type(usernameInput, "Lars");
-    // userEvent.type(passwordInput, "w");
-    // userEvent.click(getLoginButton());
+    // When: login with wrong password
+    const usernameInput = screen.getByPlaceholderText("User name");
+    const passwordInput = screen.getByPlaceholderText("Password (use 'p')");
+    userEvent.type(usernameInput, "Lars");
+    userEvent.type(passwordInput, "w");
+    userEvent.click(getLoginButton());
 
-    // // Then: eventually see error message
-    // await screen.findByText("Error: Authorization failed");
+    // Then: eventually see error message
+    await screen.findByText("Error: Authorization failed");
 
-    // // When: login with correct password
-    // userEvent.type(passwordInput, "{backspace}p");
-    // userEvent.click(getLoginButton());
+    // When: login with correct password
+    userEvent.type(passwordInput, "{backspace}p");
+    userEvent.click(getLoginButton());
 
     // // When: waiting for fetch
     // await waitFor(getProfileButton);

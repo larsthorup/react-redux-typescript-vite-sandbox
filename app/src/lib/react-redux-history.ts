@@ -7,12 +7,13 @@ export type Routes = { [key: string]: ReactNode };
 
 export const useNavigate = ({ replace } = { replace: false }) => {
   const dispatch = useDispatch();
-  return (route: string, params = {}, hash = {}) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    const pathname = compile(route, { encode: encodeURIComponent })(params);
-    const actionCreator = replace ? historyReplace : historyPush;
-    dispatch(actionCreator({ hash, pathname, search: {} }));
-  };
+  return (route: string, params = {}, hash = {}) =>
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      const pathname = compile(route, { encode: encodeURIComponent })(params);
+      const actionCreator = replace ? historyReplace : historyPush;
+      dispatch(actionCreator({ hash, pathname, search: {} }));
+    };
 };
 
 const findMatchResult = (routes: Routes, pathname: string) => {
@@ -26,7 +27,6 @@ const findMatchResult = (routes: Routes, pathname: string) => {
 
 export const useRoutes = (routes: Routes, slicer: Slicer): ReactNode | null => {
   const pathname = useSelector((state) => slicer(state).pathname);
-  console.log(pathname);
   const routePath = findMatchResult(routes, pathname);
   return routePath ? routes[routePath] : null;
 };

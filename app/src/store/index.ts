@@ -1,23 +1,23 @@
 import * as Redux from "redux";
 import * as ReduxThunk from "redux-thunk";
 import * as ReactRedux from "react-redux";
-// import * as ReduxHistory from '../lib/redux-history';
-// import * as ReactReduxHistory from '../lib/react-redux-history';
-// import * as ReduxSaga from '../lib/redux-saga';
+import * as ReduxHistory from "../lib/redux-history";
+import * as ReactReduxHistory from "../lib/react-redux-history";
+import * as ReduxSaga from "../lib/redux-saga";
 
 import auth from "./auth";
 // import person from './person';
-// import { locationReducer } from './location';
+import { locationReducer } from "./location";
 
 export const rootReducer = Redux.combineReducers({
   auth: auth.reducer,
   // person: person.reducer,
-  // location: locationReducer,
+  location: locationReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type Selector<T> = (state: RootState) => T;
-// export type Saga<TArg = void> = ReduxSaga.Saga<RootState, TArg, void>;
+export type Saga<TArg = void> = ReduxSaga.Saga<RootState, TArg, void>;
 export type Dispatch = ReduxThunk.ThunkDispatch<
   RootState,
   unknown,
@@ -27,11 +27,11 @@ export interface Store extends Redux.Store<RootState> {
   dispatch: Dispatch;
 }
 
-// const locationSlicer = (state: RootState) => state.location;
-// export const historyMiddleware = ReduxHistory.createMiddleware(locationSlicer);
-// export const useRoutes = (routes: ReactReduxHistory.Routes) => {
-//   return ReactReduxHistory.useRoutes(routes, locationSlicer);
-// };
+const locationSlicer = (state: RootState) => state.location;
+export const historyMiddleware = ReduxHistory.createMiddleware(locationSlicer);
+export const useRoutes = (routes: ReactReduxHistory.Routes) => {
+  return ReactReduxHistory.useRoutes(routes, locationSlicer);
+};
 
 // Note: stronger typed hook
 export const useSelector = <T>(selector: Selector<T>): T => {

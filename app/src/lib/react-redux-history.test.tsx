@@ -75,7 +75,7 @@ it("react-redux-history", async () => {
     </ReactRedux.Provider>
   );
   const { container, debug, getByText } = render(rootComponent);
-  debug(container);
+  // debug(container);
 
   // then initially Home is rendered
   expect(getByText("Home")).to.exist;
