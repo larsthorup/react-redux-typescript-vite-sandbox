@@ -1,12 +1,12 @@
 import React from "react";
-// import { useNavigate } from "../lib/react-redux-history";
+import { useNavigate } from "../lib/react-redux-history";
 
 import { useSelector } from "../store";
 
 const Home: React.FC = () => {
   const user = useSelector((state) => state.auth.user);
   // const navigate = useNavigate();
-  // const replace = useNavigate({ replace: true });
+  const replace = useNavigate({ replace: true });
   const loggedIn = !!user;
   const status = loggedIn ? (
     <p>
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   ) : (
     <p>
       Please
-      {/* <button onClick={replace("/signin")}>Sign in</button> */}
+      <button onClick={replace("/signin")}>Sign in</button>
       <button>Sign in</button>
     </p>
   );
