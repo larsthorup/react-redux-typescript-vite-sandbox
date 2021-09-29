@@ -5,12 +5,12 @@ import { useSelector } from "../store";
 
 const Home: React.FC = () => {
   const user = useSelector((state) => state.auth.user);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const replace = useNavigate({ replace: true });
   const loggedIn = !!user;
   const status = loggedIn ? (
     <p>
-      {/* <button onClick={navigate("/profile")}>Profile</button> */}
+      <button onClick={navigate("/profile")}>Profile</button>
       {/* <button onClick={navigate("/people")}>People</button> */}
     </p>
   ) : (

@@ -9,11 +9,11 @@ import { createRootElement } from "../root";
 describe("App", () => {
   it("auth flow", async () => {
     const getLoggedOutStatus = () => screen.getByText("Please");
-    // const getLoggedInStatus = () => screen.getByText('Lars');
-    // const getLogoutButton = () => screen.getByText('Logout');
+    const getLoggedInStatus = () => screen.getByText("Lars");
+    const getLogoutButton = () => screen.getByText("Logout");
     const getLoginButton = () => screen.getByText("Login");
     const getSigninButton = () => screen.getByText("Sign in");
-    // const getProfileButton = () => screen.getByText('Profile');
+    const getProfileButton = () => screen.getByText("Profile");
     // const getPeopleButton = () => screen.getByText('People');
 
     // When: rendered
@@ -39,17 +39,17 @@ describe("App", () => {
     userEvent.type(passwordInput, "{backspace}p");
     userEvent.click(getLoginButton());
 
-    // // When: waiting for fetch
-    // await waitFor(getProfileButton);
+    // When: waiting for fetch
+    await waitFor(getProfileButton);
 
     // // Then: is on home page
-    // expect(getPeopleButton()).toBeInTheDocument();
+    // expect(getPeopleButton()).to.exist;
 
     // // When: navigate to people page
     // userEvent.click(getPeopleButton());
 
     // // Then: eventually on people page
-    // expect(await screen.findByText("Ronja")).toBeInTheDocument();
+    // expect(await screen.findByText("Ronja")).to.exist;
 
     // // Then: each row rendered only once
     // expect(getRowRenderCount()).toEqual(4);
@@ -104,7 +104,7 @@ describe("App", () => {
     // userEvent.click(screen.getByRole("button", { name: "Close AdamX" }));
 
     // // Then: see updated name
-    // expect(await screen.findByText("AdamX")).toBeInTheDocument();
+    // expect(await screen.findByText("AdamX")).to.exist;
 
     // // Then: only that row was re-rendered
     // expect(getRowRenderCount()).toEqual(1);
@@ -112,24 +112,24 @@ describe("App", () => {
     // // When: navigate back
     // userEvent.click(screen.getByText("Back"));
 
-    // // Then: is on home page:
-    // await screen.findByText("Profile");
-    // expect(getProfileButton()).toBeInTheDocument();
+    // Then: is on home page:
+    await screen.findByText("Profile");
+    expect(getProfileButton()).to.exist;
 
-    // // When: navigate to profile
-    // userEvent.click(getProfileButton());
+    // When: navigate to profile
+    userEvent.click(getProfileButton());
 
-    // // When: waiting for lazy load
-    // await waitFor(getLoggedInStatus);
+    // When: waiting for lazy load
+    await waitFor(getLoggedInStatus);
 
-    // // Then: is on profile page
-    // expect(getLoggedInStatus()).toBeInTheDocument();
-    // expect(getLogoutButton()).toBeInTheDocument();
+    // Then: is on profile page
+    expect(getLoggedInStatus()).to.exist;
+    expect(getLogoutButton()).to.exist;
 
-    // // When: logout
-    // userEvent.click(getLogoutButton());
+    // When: logout
+    userEvent.click(getLogoutButton());
 
-    // // Then: logged out
-    // expect(getLoggedOutStatus()).toBeInTheDocument();
+    // Then: logged out
+    expect(getLoggedOutStatus()).to.exist;
   });
 });
