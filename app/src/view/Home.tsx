@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   const status = loggedIn ? (
     <p>
       <button onClick={navigate("/profile")}>Profile</button>
-      {/* <button onClick={navigate("/people")}>People</button> */}
+      <button onClick={navigate("/people")}>People</button>
     </p>
   ) : (
     <p>
