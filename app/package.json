@@ -3,18 +3,20 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "mocha": "mocha-vite-puppeteer",
+    "build": "vite build",
+    "mocha": "mocha-vite-puppeteer --enableBarePath",
     "serve": "vite preview",
     "tsc": "tsc",
-    "test": "mocha-vite-puppeteer --enableBarePath"
+    "test": "tsc && npm run mocha && npm run build"
   },
   "dependencies": {
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.2.1",
+    "@types/assert": "^1.5.6",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.2",
     "@types/ramda": "^0.27.39",
+    "assert": "^2.0.0",
     "chai": "^4.3.4",
     "history": "^5.0.0",
     "path-to-regexp": "^6.2.0",

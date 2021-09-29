@@ -1,4 +1,4 @@
-import * as assert from 'assert';
+import * as assert from "assert";
 
 import React, {
   CSSProperties,
@@ -9,12 +9,12 @@ import React, {
   useState,
   ChangeEventHandler,
   useEffect,
-} from 'react';
+} from "react";
 
-export type TableSortDirection = 'asc' | 'desc';
+export type TableSortDirection = "asc" | "desc";
 
 const reverse = (direction: TableSortDirection) => {
-  return direction === 'asc' ? 'desc' : 'asc';
+  return direction === "asc" ? "desc" : "asc";
 };
 
 export type TableSortOrder = {
@@ -71,7 +71,7 @@ export type TableColumn<TRow, TRowData = any> = {
   /**
    * `number` to right-align cell content
    */
-  type?: 'string' | 'number';
+  type?: "string" | "number";
 };
 
 /**
@@ -217,7 +217,7 @@ function TableHeaderRow<TRow>({
   rows,
   sortOrder,
 }: PropsWithChildren<TableHeaderRowProps<TRow>>) {
-  const fontWeight = 'bold';
+  const fontWeight = "bold";
   const allSelectedCheckboxRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (allSelectedCheckboxRef.current) {
@@ -237,8 +237,8 @@ function TableHeaderRow<TRow>({
   return (
     <tr>
       {columns.map(
-        ({ name, isSelectColumn, isSortable, title, type = 'string' }, key) => {
-          const textAlign = type === 'number' ? 'right' : 'left';
+        ({ name, isSelectColumn, isSortable, title, type = "string" }, key) => {
+          const textAlign = type === "number" ? "right" : "left";
           const columnControl = (() => {
             if (isSelectColumn) {
               return (
@@ -254,7 +254,7 @@ function TableHeaderRow<TRow>({
               const isSortedByThisColumn = columnName === name;
               const newDirection = isSortedByThisColumn
                 ? reverse(direction)
-                : 'asc';
+                : "asc";
               const sortOrderChangeHandler = () =>
                 onSortOrderChange({
                   columnName: name,
@@ -262,15 +262,15 @@ function TableHeaderRow<TRow>({
                 });
               const sortText = isSortedByThisColumn
                 ? `sorted ${direction}`
-                : 'sort';
+                : "sort";
               return (
                 <>
-                  {title || ''}
+                  {title || ""}
                   <button onClick={sortOrderChangeHandler}>{sortText}</button>
                 </>
               );
             } else {
-              return <>{title || ''}</>;
+              return <>{title || ""}</>;
             }
           })();
           return (
@@ -313,11 +313,11 @@ function TableRow<TRow>({
     rowOptions.onSelected && rowOptions.onSelected(row, selected);
   };
   if (isExcluded) {
-    return <tr style={{ display: 'none' }} />;
+    return <tr style={{ display: "none" }} />;
   } else if (isEditing) {
     if (!rowOptions.editor) assert.fail();
     const editor = rowOptions.editor(closeHandler, row, rowIndex, rowData);
-    const style = { backgroundColor: 'yellow' };
+    const style = { backgroundColor: "yellow" };
     return (
       <tr>
         <td colSpan={columns.length} style={style}>
@@ -388,9 +388,9 @@ function TableRowView<TRow, TRowData>({
           cellStyle,
           isEditColumn,
           isSelectColumn,
-          type = 'string',
+          type = "string",
         } = column;
-        const textAlign = type === 'number' ? 'right' : 'left';
+        const textAlign = type === "number" ? "right" : "left";
         const element = (
           <>
             {(() => {
@@ -407,7 +407,7 @@ function TableRowView<TRow, TRowData>({
                   ? rowOptions.label(row, rowIndex, rowData)
                   : `row ${rowIndex + 1}`;
                 return <button onClick={onEdit}>{`Edit ${label}`}</button>;
-              } else if (typeof cell === 'function') {
+              } else if (typeof cell === "function") {
                 return cell(row, rowIndex, rowData);
               } else {
                 return cell;
@@ -417,11 +417,11 @@ function TableRowView<TRow, TRowData>({
         );
         const style = (() => {
           switch (typeof cellStyle) {
-            case 'undefined':
+            case "undefined":
               return undefined;
-            case 'object':
+            case "object":
               return cellStyle;
-            case 'function':
+            case "function":
               return cellStyle(row, rowIndex, rowData);
           }
         })();
@@ -463,12 +463,12 @@ function TableSummaryRowView<TRow, TRowData>({
   return (
     <>
       {columns.map((column, columnIndex) => {
-        const { cellSummary, type = 'string' } = column;
-        const textAlign = type === 'number' ? 'right' : 'left';
+        const { cellSummary, type = "string" } = column;
+        const textAlign = type === "number" ? "right" : "left";
         const element = (
           <>
             {(() => {
-              if (typeof cellSummary === 'function') {
+              if (typeof cellSummary === "function") {
                 return cellSummary(rowData);
               } else {
                 return cellSummary;

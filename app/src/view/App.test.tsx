@@ -51,7 +51,7 @@ describe("App", () => {
     // Then: eventually on people page
     expect(await screen.findByText("Ronja")).to.exist;
 
-    // Then: each row rendered only once
+    // Then: each row rendered only once (but counted twice when running under vite dev server, but not the bundle)
     expect(getRowRenderCount()).to.equal(8); // TODO
     resetRowRenderCount();
 
