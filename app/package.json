@@ -10,6 +10,7 @@
     "test": "tsc && npm run mocha && npm run build"
   },
   "dependencies": {
+    "@testing-library/dom": "^8.7.0",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.2.1",
     "@types/assert": "^1.5.6",
