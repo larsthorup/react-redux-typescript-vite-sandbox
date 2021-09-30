@@ -52,7 +52,7 @@ describe("App", () => {
     expect(await screen.findByText("Ronja")).to.exist;
 
     // Then: each row rendered only once (but counted twice when running under vite dev server, but not the bundle)
-    expect(getRowRenderCount()).to.equal(8); // TODO
+    expect(getRowRenderCount()).to.equal(4);
     resetRowRenderCount();
 
     // Then: number of selected people is 0
@@ -73,7 +73,7 @@ describe("App", () => {
     ).to.have.length(1);
 
     // Then: just that row is re-rendered
-    expect(getRowRenderCount()).to.equal(2); // TODO
+    expect(getRowRenderCount()).to.equal(1);
     resetRowRenderCount();
 
     // When: select all people
@@ -87,7 +87,7 @@ describe("App", () => {
     ).to.have.length(5); // Note: including header checkbox
 
     // Then: all rows are re-rendered
-    expect(getRowRenderCount()).to.equal(8); // TODO
+    expect(getRowRenderCount()).to.equal(4);
     resetRowRenderCount();
 
     // When: click first edit button
@@ -107,7 +107,7 @@ describe("App", () => {
     expect(await screen.findByText("AdamX")).to.exist;
 
     // Then: only that row was re-rendered
-    expect(getRowRenderCount()).to.equal(2); // TODO
+    expect(getRowRenderCount()).to.equal(1);
 
     // When: navigate back
     userEvent.click(screen.getByText("Back"));

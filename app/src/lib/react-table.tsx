@@ -335,7 +335,7 @@ function TableRow<TRow>({
     const style = rowOptions.style
       ? rowOptions.style(row, rowIndex, rowData)
       : {};
-    ++rowRenderCount;
+    rowRendered[rowIndex] = true;
     return (
       <tr style={style} {...rowProps}>
         <TableRowView
@@ -489,6 +489,7 @@ function TableSummaryRowView<TRow, TRowData>({
 export default Table;
 
 // Note: instrumentation for testing purposes
-let rowRenderCount = 0;
-export const getRowRenderCount = () => rowRenderCount;
-export const resetRowRenderCount = () => (rowRenderCount = 0);
+let rowRendered: Record<number, boolean> = {};
+export const getRowRenderCount = () =>
+  Object.values(rowRendered).filter((rendered) => rendered).length;
+export const resetRowRenderCount = () => (rowRendered = {});
