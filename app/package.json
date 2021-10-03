@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "coverage": "nyc report",
     "build": "vite build",
-    "mocha": "mocha-vite-puppeteer --enableBarePath",
+    "mocha": "mocha-vite-puppeteer -c mocha-vite-puppeteer.config.json",
     "serve": "vite preview",
     "tsc": "tsc",
-    "test": "tsc && npm run mocha && npm run build"
+    "test": "tsc && npm run mocha && npm run coverage && npm run build"
   },
   "dependencies": {
     "@testing-library/dom": "^8.7.0",
@@ -35,7 +36,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@vitejs/plugin-react-refresh": "^1.3.1",
-    "mocha-vite-puppeteer": "^1.9.0",
+    "mocha-vite-puppeteer": "^1.10.0",
     "typescript": "^4.1.2",
     "vite": "^2.1.3"
   }
