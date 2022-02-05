@@ -104,10 +104,15 @@ it("react-redux-history", async () => {
   // then nothing is rendered
   expect(getNodeText(container)).to.equal("");
 
-  // navigate back twice
-  ReduxHistory.history.back();
+  // navigate back
   ReduxHistory.history.back();
 
-  // then Home is rendered
+  // then previous page (Profile with that parameter) is rendered
+  await waitFor(() => getByText("Profile-%20-all"));
+
+  // navigate back once more
+  ReduxHistory.history.back();
+
+  // then previous page (Home) is rendered
   await waitFor(() => getByText("Home"));
 });
