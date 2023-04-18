@@ -3,10 +3,12 @@ import userEvent from "@testing-library/user-event";
 
 import { expect } from "chai";
 
-import { createRootElement } from "../root";
 import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
+import { createRootElement } from "../root";
 
-describe("App", () => {
+describe("App", function () {
+  if (this.timeout) this.timeout(5000);
+
   it("auth flow", async () => {
     const getLoggedOutStatus = () => screen.getByText("Please");
     const getLoggedInStatus = () => screen.getByText("Lars");
@@ -23,21 +25,21 @@ describe("App", () => {
     expect(getLoggedOutStatus()).to.exist;
 
     // When: navigate to sign in
-    userEvent.click(getSigninButton());
+    await userEvent.click(getSigninButton());
 
     // When: login with wrong password
     const usernameInput = screen.getByPlaceholderText("User name");
     const passwordInput = screen.getByPlaceholderText("Password (use 'p')");
-    userEvent.type(usernameInput, "Lars");
-    userEvent.type(passwordInput, "w");
-    userEvent.click(getLoginButton());
+    await userEvent.type(usernameInput, "Lars");
+    await userEvent.type(passwordInput, "w");
+    await userEvent.click(getLoginButton());
 
     // Then: eventually see error message
     await screen.findByText("Error: Authorization failed");
 
     // When: login with correct password
-    userEvent.type(passwordInput, "{backspace}p");
-    userEvent.click(getLoginButton());
+    await userEvent.type(passwordInput, "{backspace}p");
+    await userEvent.click(getLoginButton());
 
     // When: waiting for fetch
     await waitFor(getProfileButton);
@@ -46,7 +48,7 @@ describe("App", () => {
     expect(getPeopleButton()).to.exist;
 
     // When: navigate to people page
-    userEvent.click(getPeopleButton());
+    await userEvent.click(getPeopleButton());
 
     // Then: eventually on people page
     expect(await screen.findByText("Ronja")).to.exist;
@@ -63,7 +65,7 @@ describe("App", () => {
     ).to.have.length(0);
 
     // When: select first person
-    userEvent.click(screen.getAllByRole("checkbox")[1]); // Note: skipping header checkbox
+    await userEvent.click(screen.getAllByRole("checkbox")[1]); // Note: skipping header checkbox
 
     // Then: number of selected people is 1
     expect(
@@ -77,7 +79,7 @@ describe("App", () => {
     resetRowRenderCount();
 
     // When: select all people
-    userEvent.click(screen.getAllByRole("checkbox")[0]); // Note: header checkbox
+    await userEvent.click(screen.getAllByRole("checkbox")[0]); // Note: header checkbox
 
     // Then: number of selected people is 4
     expect(
@@ -91,17 +93,17 @@ describe("App", () => {
     resetRowRenderCount();
 
     // When: click first edit button
-    userEvent.click(screen.getByRole("button", { name: "Edit Adam" }));
+    await userEvent.click(screen.getByRole("button", { name: "Edit Adam" }));
 
     // Then: see edit form
     await screen.findAllByRole("button", { name: "Save name" });
 
     // When: change name and click save
-    userEvent.type(screen.getByPlaceholderText("name"), "X");
-    userEvent.click(screen.getByRole("button", { name: "Save name" }));
+    await userEvent.type(screen.getByPlaceholderText("name"), "X");
+    await userEvent.click(screen.getByRole("button", { name: "Save name" }));
 
     // When: click close
-    userEvent.click(screen.getByRole("button", { name: "Close AdamX" }));
+    await userEvent.click(screen.getByRole("button", { name: "Close AdamX" }));
 
     // Then: see updated name
     expect(await screen.findByText("AdamX")).to.exist;
@@ -110,14 +112,14 @@ describe("App", () => {
     expect(getRowRenderCount()).to.equal(1);
 
     // When: navigate back
-    userEvent.click(screen.getByText("Back"));
+    await userEvent.click(screen.getByText("Back"));
 
     // Then: is on home page:
     await screen.findByText("Profile");
     expect(getProfileButton()).to.exist;
 
     // When: navigate to profile
-    userEvent.click(getProfileButton());
+    await userEvent.click(getProfileButton());
 
     // When: waiting for lazy load
     await waitFor(getLoggedInStatus);
@@ -127,7 +129,7 @@ describe("App", () => {
     expect(getLogoutButton()).to.exist;
 
     // When: logout
-    userEvent.click(getLogoutButton());
+    await userEvent.click(getLogoutButton());
 
     // Then: logged out
     expect(getLoggedOutStatus()).to.exist;

@@ -1,16 +1,12 @@
+import { act, getNodeText, render } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { expect } from "chai";
 import React, { ReactElement } from "react";
-import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
-import {
-  fireEvent,
-  render,
-  waitFor,
-  getNodeText,
-} from "@testing-library/react";
+import * as Redux from "redux";
 
-import * as ReduxHistory from "./redux-history";
 import * as ReactReduxHistory from "./react-redux-history";
+import * as ReduxHistory from "./redux-history";
 
 it("react-redux-history", async () => {
   // given initial setup
@@ -74,45 +70,51 @@ it("react-redux-history", async () => {
       <App />
     </ReactRedux.Provider>
   );
-  const { container, debug, getByText } = render(rootComponent);
+  const { container, debug, getByText, findByText } = render(rootComponent);
   // debug(container);
 
   // then initially Home is rendered
   expect(getByText("Home")).to.exist;
 
   // when navigating
-  fireEvent.click(getByText("Login"));
+  await userEvent.click(getByText("Login"));
 
   // then Signin is rendered
-  await waitFor(() => getByText("Signin"));
+  await findByText("Signin");
 
   // when clicking browser back
-  ReduxHistory.history.back();
+  act(() => {
+    ReduxHistory.history.back();
+  });
 
   // then Home is rendered
-  await waitFor(() => getByText("Home"));
+  await findByText("Home");
 
   // when navigating with hash parameter
-  fireEvent.click(getByText("Profile"));
+  await userEvent.click(getByText("Profile"));
 
   // then Profile is rendered with that parameter
-  await waitFor(() => getByText("Profile-%20-all"));
+  await findByText("Profile-%20-all");
 
   // when navigating to non-existing page
-  ReduxHistory.history.push("/notyet");
+  act(() => {
+    ReduxHistory.history.push("/notyet");
+  });
 
   // then nothing is rendered
   expect(getNodeText(container)).to.equal("");
 
   // navigate back
-  ReduxHistory.history.back();
+  act(() => {
+    ReduxHistory.history.back();
+  });
 
   // then previous page (Profile with that parameter) is rendered
-  await waitFor(() => getByText("Profile-%20-all"));
+  await findByText("Profile-%20-all");
 
   // navigate back once more
   ReduxHistory.history.back();
 
   // then previous page (Home) is rendered
-  await waitFor(() => getByText("Home"));
+  await findByText("Home");
 });
