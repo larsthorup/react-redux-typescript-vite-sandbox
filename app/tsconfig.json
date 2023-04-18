@@ -2,10 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": [
-      "vite/client", 
-      "mocha"
-    ],
+    "types": ["vite/client", "mocha"],
     "allowJs": false,
     "skipLibCheck": false,
     "esModuleInterop": false,
@@ -17,7 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "reselect-map": ["./src/lib/reselect-map"]
+    }
   },
   "include": ["./src"]
 }
