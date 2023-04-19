@@ -1,20 +1,22 @@
 import React, { Suspense } from "react";
 import { Routes } from "../lib/react-redux-history";
 
+import { useRoutes } from "../store";
 import Home from "./Home";
 import LoginForm from "./LoginForm";
-import { useRoutes } from "../store";
 
 import "./App.css";
 
 const Profile = React.lazy(() => import("./Profile"));
 const People = React.lazy(() => import("./People"));
+const Tasks = React.lazy(() => import("./Tasks"));
 
 const routes: Routes = {
   "/": <Home />,
   "/signin": <LoginForm />,
   "/profile": <Profile />,
   "/people": <People />,
+  "/tasks": <Tasks />,
 };
 
 const App: React.FC = () => {

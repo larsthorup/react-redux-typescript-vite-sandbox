@@ -1,17 +1,19 @@
+import * as ReactRedux from "react-redux";
 import * as Redux from "redux";
 import * as ReduxThunk from "redux-thunk";
-import * as ReactRedux from "react-redux";
-import * as ReduxHistory from "../lib/redux-history";
 import * as ReactReduxHistory from "../lib/react-redux-history";
+import * as ReduxHistory from "../lib/redux-history";
 import * as ReduxSaga from "../lib/redux-saga";
 
 import auth from "./auth";
-import person from "./person";
 import { locationReducer } from "./location";
+import person from "./person";
+import task from "./task";
 
 export const rootReducer = Redux.combineReducers({
   auth: auth.reducer,
   person: person.reducer,
+  task: task.reducer,
   location: locationReducer,
 });
 

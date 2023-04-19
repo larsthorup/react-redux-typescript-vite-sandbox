@@ -114,6 +114,44 @@ describe("App", function () {
     // When: navigate back
     await userEvent.click(screen.getByText("Back"));
 
+    // When: navigate to task page
+    await userEvent.click(screen.getByText("Tasks"));
+
+    // Then: eventually on task page
+    expect(await screen.findByText("Swim")).to.exist;
+
+    // Then: each row rendered only once
+    expect(getRowRenderCount()).to.equal(4);
+    resetRowRenderCount();
+
+    // When: click edit button
+    await userEvent.click(screen.getByRole("button", { name: "Edit" }));
+
+    // Then: see edit form
+    await screen.findAllByRole("button", { name: "Save" });
+
+    // Then: each row rendered only once
+    expect(getRowRenderCount()).to.equal(4);
+    resetRowRenderCount();
+
+    // When: change name and click save
+    expect(
+      (screen.getAllByPlaceholderText("title")[2] as HTMLInputElement).value
+    ).to.equal("Swim");
+    await userEvent.type(screen.getAllByPlaceholderText("title")[2], "ming");
+
+    // Then: only that row was re-rendered
+    expect(getRowRenderCount()).to.equal(1);
+
+    // When: click save button
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
+
+    // Then: updated value is shown
+    expect(await screen.findByText("Swimming")).to.exist;
+
+    // When: navigate back
+    await userEvent.click(screen.getByText("Back"));
+
     // Then: is on home page:
     await screen.findByText("Profile");
     expect(getProfileButton()).to.exist;
