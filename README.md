@@ -1,8 +1,13 @@
 # react-redux-typescript-vite-sandbox
 
+```bash
+cd app
+npm install
+npm test
+npm run dev
+```
 
 Note: this project currently requires a custom build of `mocha-vite-puppeteer` from this PR: https://github.com/larsthorup/mocha-vite-puppeteer/pull/21
-
 
 Note: this project was scaffolded with:
 
