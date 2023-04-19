@@ -1,3 +1,24 @@
+/**
+ * <Table> component that will render to native HTML <table> elements
+ *
+ * The table component is optimized for efficiently re-rendering only rows which have changed data.
+ * This gives snappy editing of large (10k rows) tables.
+ *
+ * Rows must be identified by an id / a key and the list of only those ids are passed to the Table,
+ * not the data itself.
+ *
+ * Data is fetched by providing a React hook which must efficiently return data for the row by the given id
+ * Being a hook means that it can access a React context or a Redux store.
+ * By using selectors efficiently, changes in row data can render very efficiently.
+ *
+ * Cell rendering is provided per column by a function returning JSX and taking the row data as input
+ * Only cells of changed rows will be re-rendered
+ *
+ * @see ../view/SimpleTable.tsx for simple usage
+ *
+ * Full documentation on types and members below
+ */
+
 import React, {
   CSSProperties,
   ChangeEventHandler,
@@ -8,17 +29,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-
-export type TableSortDirection = "asc" | "desc";
-
-const reverse = (direction: TableSortDirection) => {
-  return direction === "asc" ? "desc" : "asc";
-};
-
-export type TableSortOrder = {
-  columnName: string;
-  direction: TableSortDirection;
-};
 
 /**
  * The type of each item of the `columns` prop on the `Table` component
@@ -131,6 +141,17 @@ export type TableRowOptions<TRow, TRowData = any> = {
    * Use this hook to avoid re-rendering the entire table when the user selects a single row
    */
   useSelected?: (row: TRow) => boolean;
+};
+
+export type TableSortDirection = "asc" | "desc";
+
+const reverse = (direction: TableSortDirection) => {
+  return direction === "asc" ? "desc" : "asc";
+};
+
+export type TableSortOrder = {
+  columnName: string;
+  direction: TableSortDirection;
 };
 
 type TableProps<TRow> = {

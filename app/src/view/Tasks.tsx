@@ -166,6 +166,7 @@ const TaskTable: React.FC = () => {
             sortOrder={sortOrder}
             onSortOrderChange={setSortOrder}
           />
+          {/* <SimpleTable /> */}
         </>
       )}
       <button onClick={() => dispatch(historyBack())}>Back</button>
@@ -173,34 +174,5 @@ const TaskTable: React.FC = () => {
     </>
   );
 };
-
-// const PersonEditForm: React.FC<{ id: string; onClose: () => void }> = ({
-//   id,
-//   onClose,
-// }) => {
-//   const dispatch = useDispatch();
-//   const person = useSelector((state) => state.person[id]);
-//   const birthDateChangeHandler = (birthDate: string) => {
-//     dispatch(personSlice.actions.updateBirthDate({ id, birthDate }));
-//   };
-//   const nameChangeHandler = (name: string) => {
-//     dispatch(personSlice.actions.updateName({ id, name }));
-//   };
-//   return (
-//     <>
-//       <TextField
-//         label="name"
-//         value={person.name}
-//         onChange={nameChangeHandler}
-//       />
-//       <TextField
-//         label="date of birth"
-//         value={person.birthDate}
-//         onChange={birthDateChangeHandler}
-//       />
-//       <button onClick={onClose}>{`Close ${person.name}`}</button>
-//     </>
-//   );
-// };
 
 export default TaskTable;
