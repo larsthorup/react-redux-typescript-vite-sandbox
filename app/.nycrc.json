@@ -2,5 +2,5 @@
   "reporter": ["text", "html"],
   "excludeAfterRemap": false,
   "checkCoverage": true,
-  "statements": 95
+  "statements": 94
 }

@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from '../store';
-import personSlice from '../store/person';
-import {
-  selectPeopleId,
-  selectPersonSummary,
-  selectPeople,
-  PersonInfo,
-} from '../store/personSelector';
+import * as R from "ramda";
+import React, { useState } from "react";
 import Table, {
   TableColumn,
   TableRowOptions,
   TableSortOrder,
-} from '../lib/react-table';
-import { historyBack } from '../lib/redux-history';
-import useAsyncEffect from '../lib/useAsyncEffect';
-import person from '../store/person';
-import TextField from './TextField';
+} from "../lib/react-table";
+import { historyBack } from "../lib/redux-history";
+import useAsyncEffect from "../lib/useAsyncEffect";
+import { useDispatch, useSelector } from "../store";
+import { default as person, default as personSlice } from "../store/person";
+import {
+  PersonInfo,
+  selectPeople,
+  selectPeopleId,
+  selectPersonSummary,
+} from "../store/personSelector";
+import TextField from "./TextField";
 
 const PeopleTable: React.FC = () => {
   const dispatch = useDispatch();
   const [sortOrder, setSortOrder] = useState({
-    columnName: 'name',
-    direction: 'asc',
+    columnName: "name",
+    direction: "asc",
   } as TableSortOrder);
   const personIdList = useSelector((state) =>
     selectPeopleId(state, { sortOrder })
@@ -31,13 +31,25 @@ const PeopleTable: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
     dispatch(
       person.actions.addPeople({
-        '1': { id: '1', name: 'Adam', birthDate: '2012' },
-        '2': { id: '2', name: 'Susan', birthDate: '1994' },
-        '3': { id: '3', name: 'Joey', birthDate: '1966' },
-        '4': { id: '4', name: 'Ronja', birthDate: '1977' },
+        "1": { id: "1", name: "Adam", birthDate: "2012" },
+        "2": { id: "2", name: "Susan", birthDate: "1994" },
+        "3": { id: "3", name: "Joey", birthDate: "1966" },
+        "4": { id: "4", name: "Ronja", birthDate: "1977" },
       })
     );
   });
+  const addManyPeople = () => {
+    const manyPeople = Object.fromEntries(
+      R.range(10, 10000)
+        .map((i) => i.toString())
+        .map((id) => {
+          const name = btoa(Math.random().toString()).substring(14, 20);
+          const birthDate = Math.trunc(Math.random() * 50 + 1950).toString();
+          return [id, { id, name, birthDate }];
+        })
+    );
+    dispatch(person.actions.addPeople(manyPeople));
+  };
   const rows = personIdList;
   const rowOptions: TableRowOptions<typeof rows[0], PersonInfo> = {
     editor: (onClose, id) => <PersonEditForm id={id} onClose={onClose} />,
@@ -52,18 +64,18 @@ const PeopleTable: React.FC = () => {
   const columns: TableColumn<typeof rows[0], PersonInfo>[] = [
     {
       isSelectColumn: true,
-      cellSummary: () => 'Average',
+      cellSummary: () => "Average",
     },
     {
-      name: 'name',
-      title: 'Name',
+      name: "name",
+      title: "Name",
       isSortable: true,
       cell: (id, i, person) => person.name,
     },
     {
-      name: 'age',
-      title: 'Age',
-      type: 'number',
+      name: "age",
+      title: "Age",
+      type: "number",
       isSortable: true,
       cell: (id, i, person) => person.age,
       cellSummary: (personSummary) => personSummary.age,
@@ -83,6 +95,7 @@ const PeopleTable: React.FC = () => {
         />
       )}
       <button onClick={() => dispatch(historyBack())}>Back</button>
+      <button onClick={addManyPeople}>Add many more</button>
     </>
   );
 };
