@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "tsc": "tsc",
     "test": "tsc && npm run mocha && npm run coverage && npm run vitest && npm run build",
-    "vitest": "vitest --globals --environment jsdom --run"
+    "vitest": "vitest --globals --environment jsdom --coverage --run"
   },
   "dependencies": {
     "@testing-library/dom": "^9.2.0",
@@ -19,6 +19,7 @@
     "@types/chai": "^4.2.15",
     "@types/mocha": "^10.0.1",
     "@types/ramda": "^0.29.0",
+    "@vitest/coverage-c8": "^0.30.1",
     "assert": "^2.0.0",
     "chai": "^4.3.4",
     "history": "^5.0.0",
