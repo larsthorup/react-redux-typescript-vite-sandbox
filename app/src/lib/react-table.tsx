@@ -1,14 +1,12 @@
-import * as assert from "assert";
-
 import React, {
   CSSProperties,
+  ChangeEventHandler,
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useEffect,
   useRef,
   useState,
-  ChangeEventHandler,
-  useEffect,
 } from "react";
 
 export type TableSortDirection = "asc" | "desc";
@@ -315,7 +313,8 @@ function TableRow<TRow>({
   if (isExcluded) {
     return <tr style={{ display: "none" }} />;
   } else if (isEditing) {
-    if (!rowOptions.editor) assert.fail();
+    if (!rowOptions.editor)
+      throw new Error(`Missing editor in <Table> rowOptions`);
     const editor = rowOptions.editor(closeHandler, row, rowIndex, rowData);
     const style = { backgroundColor: "yellow" };
     return (

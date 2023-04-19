@@ -7,7 +7,7 @@ import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import { createRootElement } from "../root";
 
 describe("App", function () {
-  if (this.timeout) this.timeout(5000);
+  if (this) this.timeout(5000); // Note: only for Mocha
 
   it("auth flow", async () => {
     const getLoggedOutStatus = () => screen.getByText("Please");

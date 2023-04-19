@@ -9,7 +9,7 @@
     "serve": "vite preview",
     "tsc": "tsc",
     "test": "tsc && npm run mocha && npm run coverage && npm run vitest && npm run build",
-    "vitest": "vitest --global --environment jsdom --run"
+    "vitest": "vitest --globals --environment jsdom --run"
   },
   "dependencies": {
     "@testing-library/dom": "^9.2.0",
@@ -41,7 +41,7 @@
     "mocha-vite-puppeteer": "^2.0.0-beta.1",
     "nyc": "^15.1.0",
     "typescript": "^5.0.4",
-    "vite": "^2.1.3",
-    "vitest": "^0.2.7"
+    "vite": "^4.2.2",
+    "vitest": "^0.30.1"
   }
 }
