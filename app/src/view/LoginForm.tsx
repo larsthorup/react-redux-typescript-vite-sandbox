@@ -17,6 +17,7 @@ const LoginForm: React.FC = () => {
     signingInSaga,
     { error, isRunning: isAuthorizing },
   ] = useSaga(signingIn, { throwOnError: true });
+  // console.log({error})
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
     try {
@@ -44,7 +45,7 @@ const LoginForm: React.FC = () => {
       />
       <br />
       {!isAuthorizing && <button type="submit">Login</button>}
-      {error && <p>Error: {error.message}</p>}
+      {error && <p>{`Error: ${error.message}`}</p>}
       {isAuthorizing && <p>Authorizing...</p>}
     </form>
   );

@@ -1,6 +1,6 @@
-import TestRenderer from "react-test-renderer";
+import TestRenderer, { act } from "react-test-renderer";
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import { createRootElement } from "../root";
@@ -16,8 +16,11 @@ vi.mock("history", () => ({
 // await new Promise((resolve) => setTimeout(resolve, 1000));
 
 describe("App (react)", function () {
+  beforeEach(() => {
+    vi.mocked(createBrowserHistory).mockClear();
+  });
   describe(homePath, () => {
-    it("enables user to go to login screen", async () => {
+    it("enables user to go to login screen", () => {
       // Given: setup
       vi.mocked(createBrowserHistory).mockReturnValue({
         listen: vi.fn(),
@@ -45,22 +48,73 @@ describe("App (react)", function () {
     });
   });
 
+  describe(signinPath, () => {
+    // beforeEach(() => {
+    //   vi.useFakeTimers();
+    // });
+
+    // afterEach(() => {
+    //   vi.useRealTimers();
+    // });
+
+    it("should let the user login", async () => {
+      // Given: setup
+      // TODO: extract
+      vi.mocked(createBrowserHistory).mockReturnValue({
+        listen: vi.fn(),
+        location: {
+          pathname: signinPath,
+        },
+        replace: vi.fn(),
+      } as unknown as BrowserHistory);
+      const rootElement = createRootElement();
+      const { replace } = vi.mocked(createBrowserHistory).mock.results[0].value;
+
+      // When: rendered
+      const { root, toJSON } = TestRenderer.create(rootElement);
+
+      // When: login with wrong password
+      const usernameInput = root.findByProps({ placeholder: "User name" });
+      usernameInput.props.onChange({ target: { value: "Lars" } });
+      const passwordInput = root.findByProps({
+        placeholder: "Password (use 'p')",
+      });
+      passwordInput.props.onChange({ target: { value: "w" } });
+      const form = root.findByType("form");
+      // act(() => { // TODO
+      // console.log('before submit', vi.getTimerCount());
+      form.props.onSubmit({ preventDefault: vi.fn() });
+      // });
+
+      // Then: while waiting for server delay
+      root.findByProps({ children: "Authorizing..." });
+
+      // Then: eventually see error message
+      // console.log(JSON.stringify(toJSON(), null, 2));
+      // console.log('before act');
+      // act(() => {
+      //   console.log('before advanceTimers', vi.getTimerCount())
+      //   vi.runAllTimers();
+      //   console.log('after advanceTimers', vi.getTimerCount())
+      // });
+      // console.log('after act');
+      // console.log('before expect')
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      root.findByProps({ children: "Error: Authorization failed" });
+
+      // When: login with correct password
+      passwordInput.props.onChange({ target: { value: "p" } });
+      form.props.onSubmit({ preventDefault: vi.fn() });
+
+      // Then: eventually navigation to Home page
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      expect(replace).toHaveBeenCalledWith(
+        expect.objectContaining({ pathname: homePath })
+      );
+    });
+  });
+
   it("app flow", async () => {
-    // // When: login with wrong password
-    // const usernameInput = screen.getByPlaceholderText("User name");
-    // const passwordInput = screen.getByPlaceholderText("Password (use 'p')");
-    // await userEvent.type(usernameInput, "Lars");
-    // await userEvent.type(passwordInput, "w");
-    // await userEvent.click(getLoginButton());
-    // // Then: eventually see error message
-    // await screen.findByText("Error: Authorization failed");
-    // // When: login with correct password
-    // await userEvent.type(passwordInput, "{backspace}p");
-    // await userEvent.click(getLoginButton());
-    // // When: waiting for fetch
-    // await waitFor(getProfileButton);
-    // // Then: is on home page
-    // expect(getPeopleButton()).to.exist;
     // // When: navigate to people page
     // await userEvent.click(getPeopleButton());
     // // Then: eventually on people page
