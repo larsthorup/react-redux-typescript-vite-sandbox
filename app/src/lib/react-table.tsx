@@ -30,12 +30,14 @@ import React, {
   useState,
 } from "react";
 
+type TRowBase = string | number;
+
 /**
  * The type of each item of the `columns` prop on the `Table` component
  * You should usually type the collection like this:
  * `const columns: TableColumn<typeof rows[0], RowData>[] = [...]`
  */
-export type TableColumn<TRow, TRowData = any> = {
+export type TableColumn<TRow extends TRowBase, TRowData = any> = {
   /**
    * The ReactNode to render in the specified (column, rowIndex) cell
    */
@@ -87,7 +89,7 @@ export type TableColumn<TRow, TRowData = any> = {
  * You should usually type this object like this:
  * `const rowOptions: TableRowOptions<typeof rows[0], RowData>[] = [...]`
  */
-export type TableRowOptions<TRow, TRowData = any> = {
+export type TableRowOptions<TRow extends TRowBase, TRowData = any> = {
   /**
    * The ReactNode to render across the width of the table to enable the user to edit the data
    * of the specified row. Invoke `onClose` to close the editor
@@ -154,7 +156,7 @@ export type TableSortOrder = {
   direction: TableSortDirection;
 };
 
-type TableProps<TRow> = {
+type TableProps<TRow extends TRowBase> = {
   /**
    * How to render each column of the table
    */
@@ -180,7 +182,7 @@ type TableProps<TRow> = {
    */
   caption?: string;
 };
-function Table<TRow>({
+function Table<TRow extends TRowBase>({
   columns,
   onSortOrderChange,
   rowOptions,
@@ -210,7 +212,7 @@ function Table<TRow>({
               rowOptions={rowOptions || {}}
               row={row}
               rowIndex={rowIndex}
-              key={rowIndex}
+              key={row}
             />
           );
         })}
@@ -222,14 +224,14 @@ function Table<TRow>({
   );
 }
 
-type TableHeaderRowProps<TRow> = {
+type TableHeaderRowProps<TRow extends TRowBase> = {
   columns: TableColumn<TRow>[];
   onSortOrderChange?: (sortOrder: TableSortOrder) => void;
   rowOptions?: TableRowOptions<TRow>;
   rows: TRow[];
   sortOrder?: TableSortOrder;
 };
-function TableHeaderRow<TRow>({
+function TableHeaderRow<TRow extends TRowBase>({
   columns,
   onSortOrderChange,
   rowOptions,
@@ -303,13 +305,13 @@ function TableHeaderRow<TRow>({
   );
 }
 
-type TableRowProps<TRow> = {
+type TableRowProps<TRow extends TRowBase> = {
   columns: TableColumn<TRow>[];
   rowOptions: TableRowOptions<TRow>;
   row: TRow;
   rowIndex: number;
 };
-function TableRow<TRow>({
+function TableRow<TRow extends TRowBase>({
   columns,
   rowOptions,
   row,
@@ -374,7 +376,7 @@ function TableRow<TRow>({
   }
 }
 
-type TableRowViewProps<TRow, TRowData> = {
+type TableRowViewProps<TRow extends TRowBase, TRowData> = {
   columns: TableColumn<TRow, TRowData>[];
   isEditable: boolean;
   onEdit: () => void;
@@ -385,7 +387,7 @@ type TableRowViewProps<TRow, TRowData> = {
   rowData: TRowData;
   rowIndex: number;
 };
-function TableRowView<TRow, TRowData>({
+function TableRowView<TRow extends TRowBase, TRowData>({
   columns,
   isEditable,
   isSelected,
@@ -455,11 +457,11 @@ function TableRowView<TRow, TRowData>({
   );
 }
 
-type TableSummaryRowProps<TRow> = {
+type TableSummaryRowProps<TRow extends TRowBase> = {
   columns: TableColumn<TRow>[];
   rowOptions: TableRowOptions<TRow>;
 };
-function TableSummaryRow<TRow>({
+function TableSummaryRow<TRow extends TRowBase>({
   columns,
   rowOptions,
 }: PropsWithChildren<TableSummaryRowProps<TRow>>) {
@@ -472,11 +474,11 @@ function TableSummaryRow<TRow>({
   );
 }
 
-type TableSummaryRowViewProps<TRow, TRowData> = {
+type TableSummaryRowViewProps<TRow extends TRowBase, TRowData> = {
   columns: TableColumn<TRow, TRowData>[];
   rowData: TRowData;
 };
-function TableSummaryRowView<TRow, TRowData>({
+function TableSummaryRowView<TRow extends TRowBase, TRowData>({
   columns,
   rowData,
 }: PropsWithChildren<TableSummaryRowViewProps<TRow, TRowData>>) {
