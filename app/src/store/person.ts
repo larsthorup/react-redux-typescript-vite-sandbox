@@ -22,10 +22,20 @@ const addPerson: PersonReducer<Person> = (state, person) => {
   };
 };
 
-const addPeople: PersonReducer<{ [id: string]: Person }> = (state, people) => {
+const setPeople: PersonReducer<{ [id: string]: Person }> = (state, people) => {
   return {
     ...state,
     ...people,
+  };
+};
+
+const addPeople: PersonReducer<Person[]> = (state, people) => {
+  const lastId = Object.keys(state).length;
+  return {
+    ...state,
+    ...(Object.fromEntries(people.map((person, i) => { 
+      const id = (lastId + 1 + i).toString()
+      return [id, {...person, id} ]; }))),
   };
 };
 
@@ -79,6 +89,7 @@ export default createSlice({
     addPeople,
     addPerson,
     selectPerson,
+    setPeople,
     updateBirthDate,
     updateName,
   },

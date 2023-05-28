@@ -61,3 +61,12 @@ export const selectPersonSummary: Selector<PersonInfo> = createSelector(
     };
   }
 );
+
+// TODO: handle sorting
+export const selectNextRows: Selector<{[key: string]: string}> = createSelector(
+  (state: RootState) => state.person,
+  (personSet) => {
+    const idList = Object.keys(personSet);
+    return Object.fromEntries(R.range(0, idList.length).map((i) => [i === 0 ? '' : idList[i-1], idList[i]]));
+  }
+);

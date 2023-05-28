@@ -253,6 +253,7 @@ function TableRowIterator<TRow extends TRowBase>({
           ]
         : undefined);
   const row = useNextRow(previousRow);
+  // TODO: avoid "too much recursion" error above 8000 rows to avoid stack overflow
   if (!row) {
     return null;
   } else {

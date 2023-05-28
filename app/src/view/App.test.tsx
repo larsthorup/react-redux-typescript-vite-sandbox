@@ -119,8 +119,7 @@ describe("App", function () {
     expect(await screen.findByText("Unnamed")).to.exist;
 
     // Then: only all rows are re-rendered
-    // TODO: avoid re-rendering all rows including the new one
-    expect(getRowRenderCount()).to.equal(5);
+    expect(getRowRenderCount()).to.equal(1);
     resetRowRenderCount();
 
     // When: navigate back

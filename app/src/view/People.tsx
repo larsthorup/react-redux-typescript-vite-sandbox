@@ -15,8 +15,8 @@ import {
 } from "../store/person";
 import {
   PersonInfo,
+  selectNextRows,
   selectPeople,
-  selectPeopleId,
   selectPersonSummary,
 } from "../store/personSelector";
 import TextField from "./TextField";
@@ -31,7 +31,7 @@ const PeopleTable: React.FC = () => {
     // Note: simulate server request
     await new Promise((resolve) => setTimeout(resolve, 100));
     dispatch(
-      person.actions.addPeople({
+      person.actions.setPeople({
         "1": { id: "1", name: "Adam", birthDate: "2012" },
         "2": { id: "2", name: "Susan", birthDate: "1994" },
         "3": { id: "3", name: "Joey", birthDate: "1966" },
@@ -45,18 +45,17 @@ const PeopleTable: React.FC = () => {
       name: "Unnamed",
       birthDate: "2023",
     };
-    dispatch(person.actions.addPerson(newPerson));
+    dispatch(person.actions.addPeople([newPerson]));
   };
   const addManyPeople = () => {
-    const manyPeople = Object.fromEntries(
-      R.range(10, 10000)
-        .map((i) => i.toString())
-        .map((id) => {
+    const manyPeople = 
+      R.range(0, 1000)
+        .map((i) => {
+          const id = "dummy";
           const name = btoa(Math.random().toString()).substring(14, 20);
           const birthDate = Math.trunc(Math.random() * 50 + 1950).toString();
-          return [id, { id, name, birthDate }];
-        })
-    );
+          return { id, name, birthDate };
+        });
     dispatch(person.actions.addPeople(manyPeople));
   };
   const rowOptions: TableRowOptions<string, PersonInfo> = {
@@ -68,14 +67,7 @@ const PeopleTable: React.FC = () => {
     useDataSummary: () => useSelector(selectPersonSummary),
     useSelected: (id) =>
       useSelector((state) => !!selectPeople(state)[id].selected),
-    useNextRow: (previousRow) => {
-      const rows = useSelector((state) =>
-        selectPeopleId(state, { sortOrder })
-      );
-      return rows[
-        previousRow === null ? 0 : rows.findIndex((r) => r === previousRow) + 1 // TODO: make this O(1) by using nextRow[previousRow]
-      ];
-    },
+    useNextRow: (previousRow) => useSelector((state) => selectNextRows(state)[previousRow || '']),
   };
   const columns: TableColumn<string, PersonInfo>[] = [
     {
