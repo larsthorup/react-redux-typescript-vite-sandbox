@@ -192,6 +192,13 @@ function Table<TRow extends TRowBase>({
 }: PropsWithChildren<TableProps<TRow>>) {
   const columnList = columns.filter((c) => !c.isExcluded);
   const hasSummary = rowOptions && rowOptions.useDataSummary;
+  const onSelected = (selected: boolean) => {
+    if (rowOptions && rowOptions.onSelected) {
+      for (const row of rows) {
+        rowOptions.onSelected(row, selected);
+      }
+    }
+  }
   return (
     <table>
       {caption && <caption>{caption}</caption>}
@@ -199,8 +206,7 @@ function Table<TRow extends TRowBase>({
         <TableHeaderRow
           columns={columnList}
           onSortOrderChange={onSortOrderChange}
-          rows={rows}
-          rowOptions={rowOptions}
+          onSelected={onSelected}
           sortOrder={sortOrder}
         />
       </thead>
@@ -227,15 +233,13 @@ function Table<TRow extends TRowBase>({
 type TableHeaderRowProps<TRow extends TRowBase> = {
   columns: TableColumn<TRow>[];
   onSortOrderChange?: (sortOrder: TableSortOrder) => void;
-  rowOptions?: TableRowOptions<TRow>;
-  rows: TRow[];
+  onSelected: (selected: boolean) => void;
   sortOrder?: TableSortOrder;
 };
 function TableHeaderRow<TRow extends TRowBase>({
   columns,
   onSortOrderChange,
-  rowOptions,
-  rows,
+  onSelected,
   sortOrder,
 }: PropsWithChildren<TableHeaderRowProps<TRow>>) {
   const fontWeight = "bold";
@@ -249,11 +253,7 @@ function TableHeaderRow<TRow extends TRowBase>({
   const toggleAllSelected: ChangeEventHandler<HTMLInputElement> = (ev) => {
     const selected = ev.target.checked;
     setIsAllSelected(selected);
-    if (rowOptions && rowOptions.onSelected) {
-      for (const row of rows) {
-        rowOptions.onSelected(row, selected);
-      }
-    }
+    onSelected(selected);
   };
   return (
     <tr>
