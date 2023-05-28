@@ -110,6 +110,18 @@ describe("App", function () {
 
     // Then: only that row was re-rendered
     expect(getRowRenderCount()).to.equal(1);
+    resetRowRenderCount();
+
+    // When: add new person
+    await userEvent.click(screen.getByRole("button", { name: "Add one more" }));
+    
+    // Then: see added person
+    expect(await screen.findByText("Unnamed")).to.exist;
+
+    // Then: only all rows are re-rendered
+    // TODO: avoid re-rendering all rows including the new one
+    expect(getRowRenderCount()).to.equal(5);
+    resetRowRenderCount();
 
     // When: navigate back
     await userEvent.click(screen.getByText("Back"));
@@ -142,6 +154,7 @@ describe("App", function () {
 
     // Then: only that row was re-rendered
     expect(getRowRenderCount()).to.equal(1);
+    resetRowRenderCount();
 
     // When: click save button
     await userEvent.click(screen.getByRole("button", { name: "Save" }));

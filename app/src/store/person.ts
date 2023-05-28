@@ -13,6 +13,13 @@ type PersonReducer<TPayload> = SliceReducer<PersonState, TPayload>;
 
 const initialState: PersonState = {};
 
+const addPerson: PersonReducer<Person> = (state, person) => {
+  return {
+    ...state,
+    ...{[person.id]: person},
+  };
+};
+
 const addPeople: PersonReducer<{ [id: string]: Person }> = (state, people) => {
   return {
     ...state,
@@ -64,6 +71,7 @@ export default createSlice({
   initialState,
   reducers: {
     addPeople,
+    addPerson,
     selectPerson,
     updateBirthDate,
     updateName,

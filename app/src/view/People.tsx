@@ -8,7 +8,7 @@ import Table, {
 import { historyBack } from "../lib/redux-history";
 import useAsyncEffect from "../lib/useAsyncEffect";
 import { useDispatch, useSelector } from "../store";
-import { default as person, default as personSlice } from "../store/person";
+import { Person, default as person, default as personSlice } from "../store/person";
 import {
   PersonInfo,
   selectPeople,
@@ -38,6 +38,14 @@ const PeopleTable: React.FC = () => {
       })
     );
   });
+  const addOnePerson = () => {
+    const newPerson: Person = {
+      id: (personIdList.length + 1).toString(),
+      name: "Unnamed",
+      birthDate: "2023",
+    }
+    dispatch(person.actions.addPerson(newPerson));
+  }
   const addManyPeople = () => {
     const manyPeople = Object.fromEntries(
       R.range(10, 10000)
@@ -95,6 +103,7 @@ const PeopleTable: React.FC = () => {
         />
       )}
       <button onClick={() => dispatch(historyBack())}>Back</button>
+      <button onClick={addOnePerson}>Add one more</button>
       <button onClick={addManyPeople}>Add many more</button>
     </>
   );
