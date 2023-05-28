@@ -62,7 +62,7 @@ const PeopleTable: React.FC = () => {
   const rowOptions: TableRowOptions<typeof rows[0], PersonInfo> = {
     editor: (onClose, id) => <PersonEditForm id={id} onClose={onClose} />,
     label: (id, i, person) => person.name,
-    onSelected: (id, selected) =>
+    onSelected: (id, selected) => 
       dispatch(person.actions.selectPerson({ id, selected })),
     useData: (id) => useSelector((state) => selectPeople(state)[id]),
     useDataSummary: () => useSelector(selectPersonSummary),

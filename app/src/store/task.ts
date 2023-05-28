@@ -1,3 +1,4 @@
+import * as R from "ramda";
 import { createSlice, SliceReducer } from "../lib/redux-slice";
 
 export type Task = {
@@ -40,17 +41,21 @@ const completeTask: TaskReducer<{ id: string; completed: boolean }> = (
   };
 };
 
-const selectTask: TaskReducer<{ id: string; selected: boolean }> = (
+const selectTask: TaskReducer<{ id: string | null; selected: boolean }> = (
   state,
   { id, selected }
 ) => {
-  return {
-    ...state,
-    [id]: {
-      ...state[id],
-      selected,
-    },
-  };
+  if (id === null) {
+    return R.mapObjIndexed((person) => ({ ...person, selected }), state);
+  } else {
+    return {
+      ...state,
+      [id]: {
+        ...state[id],
+        selected,
+      },
+    };
+  }
 };
 const updateDueDate: TaskReducer<{ id: string; dueDate: string }> = (
   state,

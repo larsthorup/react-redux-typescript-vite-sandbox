@@ -1,4 +1,5 @@
-import { createSlice, SliceReducer } from '../lib/redux-slice';
+import * as R from "ramda";
+import { createSlice, SliceReducer } from "../lib/redux-slice";
 
 export type Person = {
   id: string;
@@ -16,7 +17,7 @@ const initialState: PersonState = {};
 const addPerson: PersonReducer<Person> = (state, person) => {
   return {
     ...state,
-    ...{[person.id]: person},
+    ...{ [person.id]: person },
   };
 };
 
@@ -27,17 +28,21 @@ const addPeople: PersonReducer<{ [id: string]: Person }> = (state, people) => {
   };
 };
 
-const selectPerson: PersonReducer<{ id: string; selected: boolean }> = (
+const selectPerson: PersonReducer<{ id: string | null; selected: boolean }> = (
   state,
   { id, selected }
 ) => {
-  return {
-    ...state,
-    [id]: {
-      ...state[id],
-      selected,
-    },
-  };
+  if (id === null) {
+    return R.mapObjIndexed((person) => ({ ...person, selected }), state);
+  } else {
+    return {
+      ...state,
+      [id]: {
+        ...state[id],
+        selected,
+      },
+    };
+  }
 };
 
 const updateBirthDate: PersonReducer<{ id: string; birthDate: string }> = (
@@ -67,7 +72,7 @@ const updateName: PersonReducer<{ id: string; name: string }> = (
 };
 
 export default createSlice({
-  name: 'person',
+  name: "person",
   initialState,
   reducers: {
     addPeople,

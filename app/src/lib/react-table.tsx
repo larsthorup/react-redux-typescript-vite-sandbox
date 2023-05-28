@@ -113,9 +113,9 @@ export type TableRowOptions<TRow extends TRowBase, TRowData = any> = {
    */
   label?: (row: TRow, index: number, data: TRowData) => string;
   /**
-   * called when the selection of a row is changed by the user
+   * called when the selection of a row is changed by the user, null means all rows
    */
-  onSelected?: (row: TRow, selected: boolean) => void;
+  onSelected?: (row: TRow | null, selected: boolean) => void;
   /**
    * Props to add to the `<tr>` of the specified row
    */
@@ -194,9 +194,7 @@ function Table<TRow extends TRowBase>({
   const hasSummary = rowOptions && rowOptions.useDataSummary;
   const onSelected = (selected: boolean) => {
     if (rowOptions && rowOptions.onSelected) {
-      for (const row of rows) {
-        rowOptions.onSelected(row, selected);
-      }
+      rowOptions.onSelected(null, selected);
     }
   }
   return (
