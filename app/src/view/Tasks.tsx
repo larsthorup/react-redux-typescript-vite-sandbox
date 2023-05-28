@@ -52,7 +52,7 @@ const TaskTable: React.FC = () => {
     dispatch(task.actions.addTasks(manyTasks));
   };
   const rows = taskIdList;
-  const rowOptions: TableRowOptions<typeof rows[0], TaskInfo> = {
+  const rowOptions: TableRowOptions<(typeof rows)[0], TaskInfo> = {
     label: (id, i, person) => person.title,
     onSelected: (id, selected) =>
       dispatch(task.actions.selectTask({ id, selected })),
@@ -60,8 +60,12 @@ const TaskTable: React.FC = () => {
     useDataSummary: () => useSelector(selectTaskSummary),
     useSelected: (id) =>
       useSelector((state) => !!selectTasks(state)[id].selected),
+    useNextRow: (previousRow) =>
+      rows[
+        previousRow === null ? 0 : rows.findIndex((r) => r === previousRow) + 1
+      ],
   };
-  const columns: TableColumn<typeof rows[0], TaskInfo>[] = [
+  const columns: TableColumn<(typeof rows)[0], TaskInfo>[] = [
     {
       isSelectColumn: true,
       cellSummary: () => "Average age",
@@ -161,7 +165,6 @@ const TaskTable: React.FC = () => {
           )}
           <Table
             columns={columns}
-            rows={rows}
             rowOptions={rowOptions}
             sortOrder={sortOrder}
             onSortOrderChange={setSortOrder}

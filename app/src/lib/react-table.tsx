@@ -143,6 +143,10 @@ export type TableRowOptions<TRow extends TRowBase, TRowData = any> = {
    * Use this hook to avoid re-rendering the entire table when the user selects a single row
    */
   useSelected?: (row: TRow) => boolean;
+  /**
+   * TBD - replaces table.rows
+   */
+  useNextRow?: (previousRow: null | TRow) => TRow | null;
 };
 
 export type TableSortDirection = "asc" | "desc";
@@ -172,7 +176,7 @@ type TableProps<TRow extends TRowBase> = {
   /**
    * Data for each row of the table
    */
-  rows: TRow[];
+  rows?: TRow[];
   /**
    * The current sort order, if sorting is enabled for any columns
    */
@@ -196,7 +200,7 @@ function Table<TRow extends TRowBase>({
     if (rowOptions && rowOptions.onSelected) {
       rowOptions.onSelected(null, selected);
     }
-  }
+  };
   return (
     <table>
       {caption && <caption>{caption}</caption>}
@@ -209,23 +213,68 @@ function Table<TRow extends TRowBase>({
         />
       </thead>
       <tbody>
-        {rows.map((row, rowIndex) => {
-          return (
-            <TableRow
-              columns={columnList}
-              rowOptions={rowOptions || {}}
-              row={row}
-              rowIndex={rowIndex}
-              key={row}
-            />
-          );
-        })}
+        <TableRowIterator
+          rowIndex={0}
+          rowOptions={rowOptions || {}}
+          rows={rows}
+          previousRow={null}
+          columns={columnList}
+        />
         {hasSummary && (
           <TableSummaryRow columns={columnList} rowOptions={rowOptions || {}} />
         )}
       </tbody>
     </table>
   );
+}
+
+type TableRowIteratorProps<TRow extends TRowBase> = {
+  rowIndex: number;
+  columns: TableColumn<TRow>[];
+  rows?: TRow[];
+  rowOptions: TableRowOptions<TRow>;
+  previousRow: TRow | null;
+};
+function TableRowIterator<TRow extends TRowBase>({
+  rowIndex,
+  columns,
+  rowOptions,
+  rows,
+  previousRow,
+}: PropsWithChildren<TableRowIteratorProps<TRow>>) {
+  const useNextRow =
+    rowOptions.useNextRow ||
+    ((previousRow) =>
+      rows
+        ? rows[
+            previousRow === null
+              ? 0
+              : rows.findIndex((r) => r === previousRow) + 1
+          ]
+        : undefined);
+  const row = useNextRow(previousRow);
+  if (!row) {
+    return null;
+  } else {
+    return (
+      <>
+        <TableRow
+          columns={columns}
+          rowOptions={rowOptions}
+          row={row}
+          rowIndex={rowIndex}
+          key={row}
+        />
+        <TableRowIterator
+          rowIndex={rowIndex + 1}
+          columns={columns}
+          rowOptions={rowOptions}
+          // rows={rows}
+          previousRow={row}
+        />
+      </>
+    );
+  }
 }
 
 type TableHeaderRowProps<TRow extends TRowBase> = {

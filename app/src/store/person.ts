@@ -15,9 +15,10 @@ type PersonReducer<TPayload> = SliceReducer<PersonState, TPayload>;
 const initialState: PersonState = {};
 
 const addPerson: PersonReducer<Person> = (state, person) => {
+  const id = (Object.keys(state).length + 1).toString()
   return {
     ...state,
-    ...{ [person.id]: person },
+    ...{ [id]: {...person, id} },
   };
 };
 

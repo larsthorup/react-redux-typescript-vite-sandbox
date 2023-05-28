@@ -8,7 +8,11 @@ import Table, {
 import { historyBack } from "../lib/redux-history";
 import useAsyncEffect from "../lib/useAsyncEffect";
 import { useDispatch, useSelector } from "../store";
-import { Person, default as person, default as personSlice } from "../store/person";
+import {
+  Person,
+  default as person,
+  default as personSlice,
+} from "../store/person";
 import {
   PersonInfo,
   selectPeople,
@@ -23,9 +27,6 @@ const PeopleTable: React.FC = () => {
     columnName: "name",
     direction: "asc",
   } as TableSortOrder);
-  const personIdList = useSelector((state) =>
-    selectPeopleId(state, { sortOrder })
-  );
   const { isRunning, isCompleted } = useAsyncEffect(async () => {
     // Note: simulate server request
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -40,12 +41,12 @@ const PeopleTable: React.FC = () => {
   });
   const addOnePerson = () => {
     const newPerson: Person = {
-      id: (personIdList.length + 1).toString(),
+      id: "dummy",
       name: "Unnamed",
       birthDate: "2023",
-    }
+    };
     dispatch(person.actions.addPerson(newPerson));
-  }
+  };
   const addManyPeople = () => {
     const manyPeople = Object.fromEntries(
       R.range(10, 10000)
@@ -58,18 +59,25 @@ const PeopleTable: React.FC = () => {
     );
     dispatch(person.actions.addPeople(manyPeople));
   };
-  const rows = personIdList;
-  const rowOptions: TableRowOptions<typeof rows[0], PersonInfo> = {
+  const rowOptions: TableRowOptions<string, PersonInfo> = {
     editor: (onClose, id) => <PersonEditForm id={id} onClose={onClose} />,
     label: (id, i, person) => person.name,
-    onSelected: (id, selected) => 
+    onSelected: (id, selected) =>
       dispatch(person.actions.selectPerson({ id, selected })),
     useData: (id) => useSelector((state) => selectPeople(state)[id]),
     useDataSummary: () => useSelector(selectPersonSummary),
     useSelected: (id) =>
       useSelector((state) => !!selectPeople(state)[id].selected),
+    useNextRow: (previousRow) => {
+      const rows = useSelector((state) =>
+        selectPeopleId(state, { sortOrder })
+      );
+      return rows[
+        previousRow === null ? 0 : rows.findIndex((r) => r === previousRow) + 1 // TODO: make this O(1) by using nextRow[previousRow]
+      ];
+    },
   };
-  const columns: TableColumn<typeof rows[0], PersonInfo>[] = [
+  const columns: TableColumn<string, PersonInfo>[] = [
     {
       isSelectColumn: true,
       cellSummary: () => "Average",
@@ -96,7 +104,6 @@ const PeopleTable: React.FC = () => {
       {isCompleted && (
         <Table
           columns={columns}
-          rows={rows}
           rowOptions={rowOptions}
           sortOrder={sortOrder}
           onSortOrderChange={setSortOrder}
