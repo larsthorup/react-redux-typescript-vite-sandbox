@@ -22,11 +22,14 @@ it("react-redux-history", async () => {
     ReactReduxHistory.useHash(locationSlicer);
   const useRoutes = (routes: ReactReduxHistory.Routes) =>
     ReactReduxHistory.useRoutes(routes, locationSlicer);
+  const history = ReduxHistory.createHistory();
   const middleware = Redux.compose(
-    Redux.applyMiddleware(ReduxHistory.createMiddleware(locationSlicer))
+    Redux.applyMiddleware(
+      ReduxHistory.createMiddleware(locationSlicer, history)
+    )
   );
   const store: Store = Redux.createStore(rootReducer, middleware);
-  ReduxHistory.listen(store);
+  ReduxHistory.listen(store, history);
   const RoutePath = {
     Home: "/",
     Profile: "/profile/:id",
@@ -84,7 +87,7 @@ it("react-redux-history", async () => {
 
   // when clicking browser back
   act(() => {
-    ReduxHistory.history.back();
+    history.back();
   });
 
   // then Home is rendered
@@ -98,7 +101,7 @@ it("react-redux-history", async () => {
 
   // when navigating to non-existing page
   act(() => {
-    ReduxHistory.history.push("/notyet");
+    history.push("/notyet");
   });
 
   // then nothing is rendered
@@ -106,14 +109,14 @@ it("react-redux-history", async () => {
 
   // navigate back
   act(() => {
-    ReduxHistory.history.back();
+    history.back();
   });
 
   // then previous page (Profile with that parameter) is rendered
   await findByText("Profile-%20-all");
 
   // navigate back once more
-  ReduxHistory.history.back();
+  history.back();
 
   // then previous page (Home) is rendered
   await findByText("Home");

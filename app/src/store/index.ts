@@ -29,8 +29,7 @@ export interface Store extends Redux.Store<RootState> {
   dispatch: Dispatch;
 }
 
-const locationSlicer = (state: RootState) => state.location;
-export const historyMiddleware = ReduxHistory.createMiddleware(locationSlicer);
+export const locationSlicer = (state: RootState) => state.location;
 export const useRoutes = (routes: ReactReduxHistory.Routes) => {
   return ReactReduxHistory.useRoutes(routes, locationSlicer);
 };

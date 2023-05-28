@@ -9,7 +9,7 @@ import { createActionCreator, AnyAction, isType } from "./redux-action";
 
 // Also described in this blog post: https://www.fullstackagile.eu/2020/03/04/routing/
 
-export const history = History.createBrowserHistory();
+export const createHistory = () => History.createBrowserHistory();
 
 // In Redux we prefer to work with `hash` and `search` elements as destructured objects,
 // instead of the string returned by the raw `history` API
@@ -89,7 +89,7 @@ export const reducer = (
 };
 
 // The middleware execute side effects against the history API for history actions
-export const createMiddleware = (slicer: Slicer): Middleware => {
+export const createMiddleware = (slicer: Slicer, history: History.BrowserHistory): Middleware => {
   return (store) => (next) => (action: AnyAction) => {
     const state = slicer(store.getState());
     if (isType(action, historyBack)) {
@@ -116,7 +116,7 @@ export interface Listener {
 
 // Note: update redux state with the initial location from the history API
 // and attach a listener to get convert all URL updates into dispatched historyChange actions
-export const listen = (store: Store): Listener => {
+export const listen = (store: Store, history: History.BrowserHistory): Listener => {
   const unlisten = history.listen(({ location }) => {
     store.dispatch(locationChanged(location));
   });

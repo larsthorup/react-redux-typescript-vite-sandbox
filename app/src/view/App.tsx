@@ -11,9 +11,11 @@ const Profile = React.lazy(() => import("./Profile"));
 const People = React.lazy(() => import("./People"));
 const Tasks = React.lazy(() => import("./Tasks"));
 
+export const homePath = "/";
+export const signinPath = "/signin";
 const routes: Routes = {
-  "/": <Home />,
-  "/signin": <LoginForm />,
+  [homePath]: <Home />,
+  [signinPath]: <LoginForm />,
   "/profile": <Profile />,
   "/people": <People />,
   "/tasks": <Tasks />,

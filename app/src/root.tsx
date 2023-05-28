@@ -4,19 +4,13 @@ import * as ReactRedux from "react-redux";
 import * as Redux from "redux";
 import ReduxThunk from "redux-thunk";
 import * as ReduxHistory from "./lib/redux-history";
-import { rootReducer, historyMiddleware, Store } from "./store";
+import { rootReducer, Store, locationSlicer } from "./store";
 
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof Redux.compose;
   }
 }
-const composeEnhancers =
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
-const middleware = composeEnhancers(
-  Redux.applyMiddleware(ReduxThunk),
-  Redux.applyMiddleware(historyMiddleware)
-);
 
 export const createRootElement = (): ReactElement => {
   const store = setupStore();
@@ -24,8 +18,16 @@ export const createRootElement = (): ReactElement => {
 };
 
 export const setupStore = (): Store => {
+  const history = ReduxHistory.createHistory();
+  const historyMiddleware = ReduxHistory.createMiddleware(locationSlicer, history);
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
+  const middleware = composeEnhancers(
+    Redux.applyMiddleware(ReduxThunk),
+    Redux.applyMiddleware(historyMiddleware)
+  );
   const store = Redux.createStore(rootReducer, middleware);
-  ReduxHistory.listen(store);
+  ReduxHistory.listen(store, history);
   return store;
 };
 

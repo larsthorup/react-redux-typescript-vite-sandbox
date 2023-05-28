@@ -6,7 +6,7 @@ import { expect } from "chai";
 import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import { createRootElement } from "../root";
 
-describe("App", function () {
+describe("App (in DOM)", function () {
   if (this) this.timeout(5000); // Note: only for Mocha
 
   it("auth flow", async () => {
