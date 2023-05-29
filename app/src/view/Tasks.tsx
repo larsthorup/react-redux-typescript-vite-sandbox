@@ -45,7 +45,7 @@ const TaskTable: React.FC = () => {
   );
   const { isRunning, isCompleted } = useAsyncEffect(async () => {
     // Note: simulate server request
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 10));
     dispatch(task.actions.addTasks(initialTasks));
   });
   const addManyTasks = () => {

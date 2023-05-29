@@ -28,7 +28,7 @@ const PeopleTable: React.FC = () => {
   );
   const { isRunning, isCompleted } = useAsyncEffect(async () => {
     // Note: simulate server delay
-    await Promise.resolve();
+    await new Promise((resolve) => setTimeout(resolve, 10));
     dispatch(
       person.actions.addPeople({
         "1": { id: "1", name: "Adam", birthDate: "2012" },

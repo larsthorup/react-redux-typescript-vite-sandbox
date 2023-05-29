@@ -13,12 +13,15 @@ const Tasks = React.lazy(() => import("./Tasks"));
 
 export const homePath = "/";
 export const signinPath = "/signin";
+export const profilePath = "/profile";
+export const peoplePath = "/people";
+export const tasksPath = "/tasks";
 const routes: Routes = {
   [homePath]: <Home />,
   [signinPath]: <LoginForm />,
-  "/profile": <Profile />,
-  "/people": <People />,
-  "/tasks": <Tasks />,
+  [profilePath]: <Profile />,
+  [peoplePath]: <People />,
+  [tasksPath]: <Tasks />,
 };
 
 const App: React.FC = () => {
