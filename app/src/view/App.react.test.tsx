@@ -1,11 +1,12 @@
+import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
-import { createRootElement } from "../root";
+import { connect, createRootElement, setupStore } from "../root";
 import { BrowserHistory, createBrowserHistory } from "history";
-import { homePath, signinPath } from "./App";
+import App, { homePath, signinPath } from "./App";
 
 vi.hoisted(() => vi.stubGlobal("window", {}));
 vi.mock("history", () => ({
@@ -29,13 +30,14 @@ describe("App (react)", function () {
         },
         replace: vi.fn(),
       } as unknown as BrowserHistory);
-      const rootElement = createRootElement();
+      const store = setupStore();
       const { replace } = vi.mocked(createBrowserHistory).mock.results[0].value;
 
       // When: rendered
-      const { root } = TestRenderer.create(rootElement);
+      const { root } = TestRenderer.create(connect(<App />, store));
 
-      // Then: user is on home screen, because they are not logged in
+      // Then: user is not logged in
+      expect(store.getState().auth.user).toBeNull();
       const signinButton = root.findByProps({ children: "Sign in" });
 
       // When: navigate to sign in
@@ -60,18 +62,18 @@ describe("App (react)", function () {
     it("should let the user login", async () => {
       // Given: setup
       // TODO: extract
-      vi.mocked(createBrowserHistory).mockReturnValue({
+      vi.mocked(createBrowserHistory).mockReturnValueOnce({
         listen: vi.fn(),
         location: {
           pathname: signinPath,
         },
         replace: vi.fn(),
       } as unknown as BrowserHistory);
-      const rootElement = createRootElement();
+      const store = setupStore();
       const { replace } = vi.mocked(createBrowserHistory).mock.results[0].value;
 
       // When: rendered
-      const { root, toJSON } = TestRenderer.create(rootElement);
+      const { root, toJSON } = TestRenderer.create(connect(<App />, store));
 
       // When: login with wrong password
       const usernameInput = root.findByProps({ placeholder: "User name" });
@@ -87,7 +89,7 @@ describe("App (react)", function () {
       root.findByProps({ children: "Authorizing..." });
 
       // Then: eventually show error message
-      expect(vi.getTimerCount()).to.equal(1); // Note: auth delay
+      expect(vi.getTimerCount()).toBe(1); // Note: auth delay
       await vi.runAllTimersAsync(); // Note: flush pending timers and promises
       root.findByProps({ children: "Error: Authorization failed" });
 
@@ -99,11 +101,14 @@ describe("App (react)", function () {
       root.findByProps({ children: "Authorizing..." });
 
       // Then: eventually navigate to Home page
-      expect(vi.getTimerCount()).to.equal(1); // Note: auth delay
+      expect(vi.getTimerCount()).toBe(1); // Note: auth delay
       await vi.runAllTimersAsync(); // Note: flush pending timers and promises
       expect(replace).toHaveBeenCalledWith(
         expect.objectContaining({ pathname: homePath })
       );
+
+      // Then: user is logged in
+      expect(store.getState().auth.user).toEqual({name: "Lars"});
     });
   });
 
