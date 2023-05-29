@@ -17,7 +17,6 @@ const LoginForm: React.FC = () => {
     signingInSaga,
     { error, isRunning: isAuthorizing },
   ] = useSaga(signingIn, { throwOnError: true });
-  // console.log({error})
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
     try {

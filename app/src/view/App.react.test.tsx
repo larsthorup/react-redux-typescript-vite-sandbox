@@ -49,13 +49,13 @@ describe("App (react)", function () {
   });
 
   describe(signinPath, () => {
-    // beforeEach(() => {
-    //   vi.useFakeTimers();
-    // });
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
 
-    // afterEach(() => {
-    //   vi.useRealTimers();
-    // });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
     it("should let the user login", async () => {
       // Given: setup
@@ -81,33 +81,26 @@ describe("App (react)", function () {
       });
       passwordInput.props.onChange({ target: { value: "w" } });
       const form = root.findByType("form");
-      // act(() => { // TODO
-      // console.log('before submit', vi.getTimerCount());
       form.props.onSubmit({ preventDefault: vi.fn() });
-      // });
 
-      // Then: while waiting for server delay
+      // Then: show loading indicator
       root.findByProps({ children: "Authorizing..." });
 
-      // Then: eventually see error message
-      // console.log(JSON.stringify(toJSON(), null, 2));
-      // console.log('before act');
-      // act(() => {
-      //   console.log('before advanceTimers', vi.getTimerCount())
-      //   vi.runAllTimers();
-      //   console.log('after advanceTimers', vi.getTimerCount())
-      // });
-      // console.log('after act');
-      // console.log('before expect')
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      // Then: eventually show error message
+      expect(vi.getTimerCount()).to.equal(1); // Note: auth delay
+      await vi.runAllTimersAsync(); // Note: flush pending timers and promises
       root.findByProps({ children: "Error: Authorization failed" });
 
       // When: login with correct password
       passwordInput.props.onChange({ target: { value: "p" } });
       form.props.onSubmit({ preventDefault: vi.fn() });
 
-      // Then: eventually navigation to Home page
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      // Then: show loading indicator
+      root.findByProps({ children: "Authorizing..." });
+
+      // Then: eventually navigate to Home page
+      expect(vi.getTimerCount()).to.equal(1); // Note: auth delay
+      await vi.runAllTimersAsync(); // Note: flush pending timers and promises
       expect(replace).toHaveBeenCalledWith(
         expect.objectContaining({ pathname: homePath })
       );
