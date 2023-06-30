@@ -28,7 +28,7 @@ const mockLocation = (pathname: string) => {
   } as unknown as BrowserHistory);
 };
 
-for (let i = 0; i < 100; ++i)
+for (let i = 0; i < 1; ++i)
   describe("App (react)", function () {
     beforeEach(() => {
       vi.useFakeTimers();

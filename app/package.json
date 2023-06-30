@@ -9,8 +9,8 @@
     "serve": "vite preview",
     "tsc": "tsc",
     "test": "tsc && npm run mocha && npm run coverage && npm run vitest:coverage && npm run build",
-    "vitest": "vitest --globals --environment jsdom",
-    "vitest:coverage": "vitest --globals --environment jsdom --coverage --run"
+    "vitest": "vitest ",
+    "vitest:coverage": "vitest --coverage --run"
   },
   "dependencies": {
     "@testing-library/dom": "^9.2.0",
