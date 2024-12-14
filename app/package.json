@@ -28,10 +28,10 @@
     "ramda": "^0.30.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.0.5",
+    "react-redux": "^9.2.0",
     "react-test-renderer": "^18.2.0",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
     "reselect": "^4.0.0",
     "reselect-map": "^1.0.6"
   },

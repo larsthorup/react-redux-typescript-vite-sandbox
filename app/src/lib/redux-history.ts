@@ -1,8 +1,8 @@
 import queryString from "query-string";
 import * as R from "ramda";
-import { Middleware, Store } from "redux";
+import { UnknownAction, Middleware, Store } from "redux";
 import * as History from "history";
-import { createActionCreator, AnyAction, isType } from "./redux-action";
+import { createActionCreator, isType } from "./redux-action";
 
 // Note: this library is a simple implementation of a Redux-first router
 // inspired by this blog post: https://www.freecodecamp.org/news/an-introduction-to-the-redux-first-routing-model-98926ebf53cb/
@@ -69,7 +69,7 @@ export const initialState: State = {
 
 export const reducer = (
   state: State = initialState,
-  action: AnyAction
+  action: UnknownAction
 ): State => {
   // Note: historyPush and historyReplace actions are not handled in the reducer
   // instead they are handled in the middleware below where the URL will be
@@ -90,7 +90,7 @@ export const reducer = (
 
 // The middleware execute side effects against the history API for history actions
 export const createMiddleware = (slicer: Slicer, history: History.BrowserHistory): Middleware => {
-  return (store) => (next) => (action: AnyAction) => {
+  return (store) => (next) => (action: unknown) => {
     const state = slicer(store.getState());
     if (isType(action, historyBack)) {
       history.back();

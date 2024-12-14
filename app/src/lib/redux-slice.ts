@@ -1,6 +1,6 @@
 import * as R from 'ramda';
+import { UnknownAction} from 'redux';
 import {
-  AnyAction,
   ActionCreator,
   createActionCreator,
   PayloadAction
@@ -18,7 +18,7 @@ type SliceReducers<TState> = {
 };
 
 // Reducer is used below to type the "reducer" returned by createSlice()
-type Reducer<TState> = (state: TState | undefined, action: AnyAction) => TState;
+type Reducer<TState> = (state: TState | undefined, action: UnknownAction) => TState;
 
 // SliceConfig can be used to type the parameter to createSlice()
 type SliceConfig<TState, TSliceReducers extends SliceReducers<TState>> = {
@@ -84,7 +84,7 @@ const createReducer = <TState, TSliceReducers extends SliceReducers<any>>(
   );
   const reducer = (
     state = sliceConfig.initialState,
-    action: AnyAction
+    action: UnknownAction
   ): TState => {
     const sliceReducer = sliceReducerByType[action.type];
     if (sliceReducer) {

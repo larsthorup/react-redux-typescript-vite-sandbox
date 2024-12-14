@@ -1,25 +1,23 @@
-export interface AnyAction {
-  type: string;
-}
+import { UnknownAction, isAction } from "redux"
 
-export interface PayloadAction<TPayload> extends AnyAction {
+export interface PayloadAction<TPayload> extends UnknownAction {
   type: string;
   payload: TPayload;
 }
 
-export interface AnyActionCreator {
+export interface UnknownActionCreator {
   type: string;
 }
 
-export interface ActionCreator<Payload> extends AnyActionCreator {
+export interface ActionCreator<Payload> extends UnknownActionCreator {
   (payload: Payload): PayloadAction<Payload>;
 }
 
 export const isType = <Payload>(
-  action: AnyAction,
+  action: unknown,
   actionCreator: ActionCreator<Payload>
 ): action is PayloadAction<Payload> => {
-  return action.type === actionCreator.type;
+  return isAction(action) && action.type === actionCreator.type;
 };
 
 export const createActionCreator = <Payload = void>(
