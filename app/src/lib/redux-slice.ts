@@ -77,8 +77,8 @@ const createReducer = <TState, TSliceReducers extends SliceReducers<any>>(
   sliceConfig: SliceConfig<TState, TSliceReducers>
 ) => {
   const sliceReducerByType = R.fromPairs(
-    R.toPairs(sliceConfig.reducers).map(([key, r]: [string, any]) => [
-      `${sliceConfig.name}.${key}`,
+    R.toPairs(sliceConfig.reducers).map(([key, r]: [string | number | symbol, any]) => [
+      `${sliceConfig.name}.${String(key)}` as string,
       r
     ])
   );
