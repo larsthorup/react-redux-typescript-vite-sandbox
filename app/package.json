@@ -5,7 +5,7 @@
     "dev": "vite",
     "coverage": "nyc report",
     "build": "vite build",
-    "mocha": "mocha-vite-puppeteer -c mocha-vite-puppeteer.config.json",
+    "mocha": "mocha-vite-puppeteer --verbose -c mocha-vite-puppeteer.config.json",
     "serve": "vite preview",
     "tsc": "tsc",
     "test": "tsc && npm run mocha && npm run coverage && npm run vitest:coverage && npm run build",
