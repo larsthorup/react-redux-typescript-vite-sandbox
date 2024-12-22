@@ -192,7 +192,7 @@ function Table<TRow extends TRowBase, TRowData extends object>({
 }: PropsWithChildren<TableProps<TRow, TRowData>>) {
   const columnList = columns.filter((c) => !c.isExcluded);
   const onSelected = (selected: boolean) => {
-    if (rowOptions && rowOptions.onSelected) {
+    if (rowOptions.onSelected) {
       rowOptions.onSelected(null, selected);
     }
   }
@@ -219,7 +219,9 @@ function Table<TRow extends TRowBase, TRowData extends object>({
             />
           );
         })}
-        <TableSummaryRow columns={columnList} rowOptions={rowOptions} />
+        {rowOptions.useDataSummary && (
+          <TableSummaryRow columns={columnList} useDataSummary={rowOptions.useDataSummary} />
+        )}
       </tbody>
     </table>
   );
@@ -312,10 +314,10 @@ function TableRow<TRow extends TRowBase, TRowData extends object>({
   row,
   rowIndex,
 }: PropsWithChildren<TableRowProps<TRow, TRowData>>) {
-  const useData = rowOptions.useData || (() => null);
-  const rowData = useData(row, rowIndex);
+  const useData = rowOptions.useData;
+  const rowData = useData(row, rowIndex); // eslint-disable-line react-compiler/react-compiler
   const useSelected = rowOptions.useSelected || (() => false);
-  const isSelected = useSelected(row);
+  const isSelected = useSelected(row); // eslint-disable-line react-compiler/react-compiler
   const [isEditing, setIsEditing] = useState(false);
   const isExcluded =
     rowOptions.isExcluded && rowOptions.isExcluded(row, rowIndex, rowData);
@@ -454,17 +456,13 @@ function TableRowView<TRow extends TRowBase, TRowData extends object>({
 
 type TableSummaryRowProps<TRow extends TRowBase, TRowData extends object> = {
   columns: TableColumn<TRow, TRowData>[];
-  rowOptions: TableRowOptions<TRow, TRowData>;
+  useDataSummary: () => TRowData
 };
 function TableSummaryRow<TRow extends TRowBase, TRowData extends object>({
   columns,
-  rowOptions,
+  useDataSummary,
 }: PropsWithChildren<TableSummaryRowProps<TRow, TRowData>>) {
-  const useDataSummary = rowOptions.useDataSummary;
-  if (!useDataSummary) {
-    return null;
-  }
-  const rowData = useDataSummary();
+  const rowData = useDataSummary(); // eslint-disable-line react-compiler/react-compiler
   return (
     <tr>
       <TableSummaryRowView columns={columns} rowData={rowData} />

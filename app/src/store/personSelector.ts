@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import { createSelector } from "reselect";
 import { createObjectSelector } from "reselect-map";
-import { RootState, Selector } from ".";
+import { RootState, Selector, useSelector } from ".";
 import cacheResultOf from "../lib/cacheResultOf";
 import { TableSortOrder } from "../lib/react-table";
 import { Person } from "./person";
@@ -61,3 +61,15 @@ export const selectPersonSummary: Selector<PersonInfo> = createSelector(
     };
   }
 );
+
+export function usePerson(id: string) {
+  return useSelector((state) => selectPeople(state)[id]);
+}
+
+export function usePersonSummary() {
+  return useSelector(selectPersonSummary);
+}
+
+export function useIsPersonSelected(id: string) {
+  return useSelector((state) => !!selectPeople(state)[id].selected)
+}

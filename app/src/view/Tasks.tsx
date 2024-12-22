@@ -12,8 +12,9 @@ import { default as task, default as taskSlice } from "../store/task";
 import {
   TaskInfo,
   selectTaskIdList,
-  selectTaskSummary,
-  selectTasks,
+  useIsTaskSelected,
+  useTask,
+  useTaskSummary,
 } from "../store/taskSelector";
 
 const initialTasks = {
@@ -56,10 +57,9 @@ const TaskTable: React.FC = () => {
     label: (id, i, person) => person.title,
     onSelected: (id, selected) =>
       dispatch(task.actions.selectTask({ id, selected })),
-    useData: (id) => useSelector((state) => selectTasks(state)[id]),
-    useDataSummary: () => useSelector(selectTaskSummary),
-    useSelected: (id) =>
-      useSelector((state) => !!selectTasks(state)[id].selected),
+    useData: useTask, // eslint-disable-line react-compiler/react-compiler
+    useDataSummary: useTaskSummary, // eslint-disable-line react-compiler/react-compiler
+    useSelected: useIsTaskSelected, // eslint-disable-line react-compiler/react-compiler
   };
   const columns: TableColumn<typeof rows[0], TaskInfo>[] = [
     {

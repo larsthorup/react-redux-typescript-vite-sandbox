@@ -11,9 +11,10 @@ import { useDispatch, useSelector } from "../store";
 import { Person, default as person, default as personSlice } from "../store/person";
 import {
   PersonInfo,
-  selectPeople,
   selectPeopleId,
-  selectPersonSummary,
+  usePerson,
+  useIsPersonSelected,
+  usePersonSummary,
 } from "../store/personSelector";
 import TextField from "./TextField";
 
@@ -64,10 +65,9 @@ const PeopleTable: React.FC = () => {
     label: (id, i, person) => person.name,
     onSelected: (id, selected) => 
       dispatch(person.actions.selectPerson({ id, selected })),
-    useData: (id) => useSelector((state) => selectPeople(state)[id]),
-    useDataSummary: () => useSelector(selectPersonSummary),
-    useSelected: (id) =>
-      useSelector((state) => !!selectPeople(state)[id].selected),
+    useData: usePerson, // eslint-disable-line react-compiler/react-compiler
+    useDataSummary: usePersonSummary, // eslint-disable-line react-compiler/react-compiler
+    useSelected: useIsPersonSelected, // eslint-disable-line react-compiler/react-compiler
   };
   const columns: TableColumn<typeof rows[0], PersonInfo>[] = [
     {

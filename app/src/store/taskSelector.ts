@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import { createSelector } from "reselect";
 import { createObjectSelector } from "reselect-map";
-import { RootState, Selector } from ".";
+import { RootState, Selector, useSelector } from ".";
 import cacheResultOf from "../lib/cacheResultOf";
 import { TableSortOrder } from "../lib/react-table";
 import { Task } from "./task";
@@ -52,3 +52,15 @@ export const selectTaskSummary: Selector<TaskInfo> = createSelector(
     };
   }
 );
+
+export function useTask(id: string) {
+  return useSelector((state) => selectTasks(state)[id]);
+}
+
+export function useTaskSummary() {
+  return useSelector(selectTaskSummary);
+}
+
+export function useIsTaskSelected(id: string) {
+  return useSelector((state) => !!selectTasks(state)[id].selected);
+}
