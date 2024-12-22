@@ -22,7 +22,7 @@ describe("App (in DOM)", function () {
     render(createRootElement());
 
     // Then: is logged out
-    expect(getLoggedOutStatus()).to.exist;
+    expect(getLoggedOutStatus()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When: navigate to sign in
     await userEvent.click(getSigninButton());
@@ -45,13 +45,13 @@ describe("App (in DOM)", function () {
     await waitFor(getProfileButton);
 
     // Then: is on home page
-    expect(getPeopleButton()).to.exist;
+    expect(getPeopleButton()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When: navigate to people page
     await userEvent.click(getPeopleButton());
 
     // Then: eventually on people page
-    expect(await screen.findByText("Ronja")).to.exist;
+    expect(await screen.findByText("Ronja")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // Then: each row rendered only once (but counted twice when running under vite dev server, but not the bundle)
     expect(getRowRenderCount()).to.equal(4);
@@ -106,7 +106,7 @@ describe("App (in DOM)", function () {
     await userEvent.click(screen.getByRole("button", { name: "Close AdamX" }));
 
     // Then: see updated name
-    expect(await screen.findByText("AdamX")).to.exist;
+    expect(await screen.findByText("AdamX")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // Then: only that row was re-rendered
     expect(getRowRenderCount()).to.equal(1);
@@ -116,7 +116,7 @@ describe("App (in DOM)", function () {
     await userEvent.click(screen.getByRole("button", { name: "Add one more" }));
     
     // Then: see added person
-    expect(await screen.findByText("Unnamed")).to.exist;
+    expect(await screen.findByText("Unnamed")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // Then: only all rows are re-rendered
     // TODO: avoid re-rendering all rows including the new one
@@ -130,7 +130,7 @@ describe("App (in DOM)", function () {
     await userEvent.click(screen.getByText("Tasks"));
 
     // Then: eventually on task page
-    expect(await screen.findByText("Swim")).to.exist;
+    expect(await screen.findByText("Swim")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // Then: each row rendered only once
     expect(getRowRenderCount()).to.equal(4);
@@ -160,14 +160,14 @@ describe("App (in DOM)", function () {
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
     // Then: updated value is shown
-    expect(await screen.findByText("Swimming")).to.exist;
+    expect(await screen.findByText("Swimming")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When: navigate back
     await userEvent.click(screen.getByText("Back"));
 
     // Then: is on home page:
     await screen.findByText("Profile");
-    expect(getProfileButton()).to.exist;
+    expect(getProfileButton()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When: navigate to profile
     await userEvent.click(getProfileButton());
@@ -176,13 +176,13 @@ describe("App (in DOM)", function () {
     await waitFor(getLoggedInStatus);
 
     // Then: is on profile page
-    expect(getLoggedInStatus()).to.exist;
-    expect(getLogoutButton()).to.exist;
+    expect(getLoggedInStatus()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
+    expect(getLogoutButton()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When: logout
     await userEvent.click(getLogoutButton());
 
     // Then: logged out
-    expect(getLoggedOutStatus()).to.exist;
+    expect(getLoggedOutStatus()).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
   });
 });

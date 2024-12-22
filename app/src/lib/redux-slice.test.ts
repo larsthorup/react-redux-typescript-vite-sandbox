@@ -40,7 +40,7 @@ describe("redux-slice", () => {
     const { dispatch, getState } = store;
 
     // Initially, slice state is initial state
-    expect(getState().auth.user).to.be.null;
+    expect(getState().auth.user).to.be.null; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
     // When dispatching an action
     dispatch(slice.actions.signin({ user: { name: "Lars" } }));
@@ -52,6 +52,6 @@ describe("redux-slice", () => {
     dispatch(slice.actions.signout());
 
     // Then, slice state has updated accordingly
-    expect(getState().auth.user).to.be.null;
+    expect(getState().auth.user).to.be.null; // eslint-disable-line @typescript-eslint/no-unused-expressions
   });
 });

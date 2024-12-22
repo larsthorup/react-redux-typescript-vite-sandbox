@@ -14,7 +14,7 @@ export type SliceReducer<TState, TPayload = void> = (
 
 // SliceReducers is used below to restrict the type of a set of reducers in a slice
 type SliceReducers<TState> = {
-  [key: string]: SliceReducer<TState, any>;
+  [key: string]: SliceReducer<TState, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
 // Reducer is used below to type the "reducer" returned by createSlice()
@@ -57,13 +57,13 @@ type Actions<TState, TSliceReducers extends SliceReducers<TState>> = {
 
 // PayloadParameterTypeOf is used by Actions to extract the type of the "payload" parameter of a slice reducer
 type PayloadParameterTypeOf<
-  TSliceReducer extends SliceReducer<any, any>
-> = Parameters<TSliceReducer>[1] extends {}
+  TSliceReducer extends SliceReducer<any, any> // eslint-disable-line @typescript-eslint/no-explicit-any
+> = Parameters<TSliceReducer>[1] extends object
   ? Parameters<TSliceReducer>[1]
   : void;
 
 // createActions() uses createActionCreator() to turn sliceReducers into actions
-const createActions = <TState, TSliceReducers extends SliceReducers<any>>(
+const createActions = <TState, TSliceReducers extends SliceReducers<any>>( // eslint-disable-line @typescript-eslint/no-explicit-any
   sliceConfig: SliceConfig<TState, TSliceReducers>
 ) => {
   return R.mapObjIndexed(
@@ -73,11 +73,11 @@ const createActions = <TState, TSliceReducers extends SliceReducers<any>>(
 };
 
 // createReducer applies the sliceReducer corresponding to the passed in action
-const createReducer = <TState, TSliceReducers extends SliceReducers<any>>(
+const createReducer = <TState, TSliceReducers extends SliceReducers<any>>( // eslint-disable-line @typescript-eslint/no-explicit-any
   sliceConfig: SliceConfig<TState, TSliceReducers>
 ) => {
   const sliceReducerByType = R.fromPairs(
-    R.toPairs(sliceConfig.reducers).map(([key, r]: [string | number | symbol, any]) => [
+    R.toPairs(sliceConfig.reducers).map(([key, r]: [string | number | symbol, any]) => [ // eslint-disable-line @typescript-eslint/no-explicit-any
       `${sliceConfig.name}.${String(key)}` as string,
       r
     ])
@@ -88,7 +88,7 @@ const createReducer = <TState, TSliceReducers extends SliceReducers<any>>(
   ): TState => {
     const sliceReducer = sliceReducerByType[action.type];
     if (sliceReducer) {
-      return sliceReducer(state, (action as PayloadAction<any>).payload);
+      return sliceReducer(state, (action as PayloadAction<any>).payload); // eslint-disable-line @typescript-eslint/no-explicit-any
     } else {
       return state;
     }

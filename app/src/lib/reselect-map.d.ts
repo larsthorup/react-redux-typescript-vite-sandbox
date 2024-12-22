@@ -12,34 +12,7 @@ export as namespace ReselectMap;
 
 type ObjectMap<T> = { [key: string]: T } | { [key: number]: T };
 
-// Typings for memoize functions
-
-export type MemoizeFunc = <F extends Function>(
-  fn: F,
-  equalityCheck?: <T>(a: T, b: T) => boolean
-) => F;
-export const arrayMemoize: MemoizeFunc;
-export const objectMemoize: MemoizeFunc;
-export const listMemoize: MemoizeFunc;
-export const mapMemoize: MemoizeFunc;
-
-// Typing these was too diffcult, todo for someone smarter than me.
-
-export function memoizeMap(): any;
-export function memoizeList(): any;
-export function createMappedSelectorCreator(): any;
-export function createListSelector(): any;
-export function createMapSelector(): any;
-
-type EqualityCheck = (a: any, b: any) => boolean;
-
-export function createListSelectorCreator(
-  equalityCheck: EqualityCheck
-): typeof createListSelector;
-
-export function createMapSelectorCreator(
-  equalityCheck: EqualityCheck
-): typeof createMapSelector;
+type EqualityCheck = (a: unknown, b: unknown) => boolean;
 
 export function createArraySelectorCreator(
   equalityCheck: EqualityCheck

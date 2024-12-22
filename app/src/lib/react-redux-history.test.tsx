@@ -16,9 +16,9 @@ it("react-redux-history", async () => {
   type RootState = ReturnType<typeof rootReducer>;
   type Store = Redux.Store<RootState>;
   const locationSlicer = (state: RootState) => state.location;
-  const usePath = <T extends {}>(routePath: string): T =>
+  const usePath = <T extends object>(routePath: string): T =>
     ReactReduxHistory.usePath(routePath, locationSlicer);
-  const useHash = <T extends {}>(): T =>
+  const useHash = <T extends object>(): T =>
     ReactReduxHistory.useHash(locationSlicer);
   const useRoutes = (routes: ReactReduxHistory.Routes) =>
     ReactReduxHistory.useRoutes(routes, locationSlicer);
@@ -73,11 +73,11 @@ it("react-redux-history", async () => {
       <App />
     </ReactRedux.Provider>
   );
-  const { container, debug, getByText, findByText } = render(rootComponent);
+  const { container, /* debug, */ getByText, findByText } = render(rootComponent);
   // debug(container);
 
   // then initially Home is rendered
-  expect(getByText("Home")).to.exist;
+  expect(getByText("Home")).to.exist; // eslint-disable-line @typescript-eslint/no-unused-expressions
 
   // when navigating
   await userEvent.click(getByText("Login"));

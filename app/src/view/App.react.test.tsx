@@ -84,7 +84,7 @@ for (let i = 0; i < 1; ++i)
           testRenderer = TestRenderer.create(connect(<App />, store));
         });
         // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root, toJSON } = testRenderer;
+        const { root } = testRenderer;
 
         // When: login with wrong password
         const usernameInput = root.findByProps({ placeholder: "User name" });
@@ -140,8 +140,6 @@ for (let i = 0; i < 1; ++i)
         // Given: setup
         mockLocation(peoplePath);
         const store = setupStore();
-        const { replace } =
-          vi.mocked(createBrowserHistory).mock.results[0].value;
 
         // When: rendered
         let testRenderer: ReactTestRenderer;
@@ -256,8 +254,6 @@ for (let i = 0; i < 1; ++i)
         // Given: setup
         mockLocation(tasksPath);
         const store = setupStore();
-        const { replace } =
-          vi.mocked(createBrowserHistory).mock.results[0].value;
 
         // When: rendered
         let testRenderer: ReactTestRenderer;
@@ -265,7 +261,7 @@ for (let i = 0; i < 1; ++i)
           testRenderer = TestRenderer.create(connect(<App />, store));
         });
         // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root, toJSON } = testRenderer;
+        const { root } = testRenderer;
 
         // Then: eventually on task page
         await vi.runAllTimersAsync(); // Note: flush pending timers and promises
@@ -324,7 +320,7 @@ for (let i = 0; i < 1; ++i)
           testRenderer = TestRenderer.create(connect(<App />, store));
         });
         // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root, toJSON } = testRenderer;
+        const { root } = testRenderer;
 
         // Then: is on profile page
         await vi.runAllTimersAsync(); // Note: flush pending timers and promises

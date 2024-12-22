@@ -89,7 +89,7 @@ export const reducer = (
 };
 
 // The middleware execute side effects against the history API for history actions
-export const createMiddleware = (slicer: Slicer, history: History.BrowserHistory): Middleware => {
+export const createMiddleware = <TRootState extends object>(slicer: Slicer<TRootState>, history: History.BrowserHistory): Middleware => {
   return (store) => (next) => (action: unknown) => {
     const state = slicer(store.getState());
     if (isType(action, historyBack)) {
@@ -130,4 +130,4 @@ export const listen = (store: Store, history: History.BrowserHistory): Listener 
   return { unlisten };
 };
 
-export type Slicer = (state: any) => State;
+export type Slicer<TRootState extends object> = (state: TRootState) => State;

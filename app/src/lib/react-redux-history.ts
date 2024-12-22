@@ -25,21 +25,21 @@ const findMatchResult = (routes: Routes, pathname: string) => {
   }
 };
 
-export const useRoutes = (routes: Routes, slicer: Slicer): ReactNode | null => {
-  const pathname = useSelector((state) => slicer(state).pathname);
+export const useRoutes = <TRootState extends object>(routes: Routes, slicer: Slicer<TRootState>): ReactNode | null => {
+  const pathname = useSelector((state: TRootState) => slicer(state).pathname);
   const routePath = findMatchResult(routes, pathname);
   return routePath ? routes[routePath] : null;
 };
 
-export const usePath = <T extends {}>(routePath: string, slicer: Slicer): T => {
-  const pathname = useSelector((state) => slicer(state).pathname);
+export const usePath = <T extends object, TRootState extends object>(routePath: string, slicer: Slicer<TRootState>): T => {
+  const pathname = useSelector((state: TRootState) => slicer(state).pathname);
   const matchResult = match(routePath, { decode: decodeURIComponent })(
     pathname
   );
   return (matchResult ? matchResult.params : {}) as T;
 };
 
-export const useHash = <T extends {}>(slicer: Slicer): T => {
-  const hash = useSelector((state) => slicer(state).hash);
+export const useHash = <T extends object, TRootState extends object>(slicer: Slicer<TRootState>): T => {
+  const hash = useSelector((state: TRootState) => slicer(state).hash);
   return hash as T;
 };

@@ -22,7 +22,7 @@ const LoginForm: React.FC = () => {
     try {
       await dispatch(signingInSaga({ password, username }));
       dispatch(historyReplace({ pathname: '/' }));
-    } catch (err) {
+    } catch {
       // handled with useSaga
     }
   };

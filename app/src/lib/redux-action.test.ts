@@ -19,9 +19,8 @@ describe("redux-action", () => {
     const signin = createActionCreator<{ name: string }>("SIGNIN");
     const signout = createActionCreator("SIGNOUT");
     const signinAction = signin({ name: "ulrik" });
-    const signoutAction = signout();
-    expect(isType(signinAction, signin)).to.be.true;
-    expect(isType(signinAction, signout)).to.be.false;
+    expect(isType(signinAction, signin)).to.be.true; // eslint-disable-line @typescript-eslint/no-unused-expressions
+    expect(isType(signinAction, signout)).to.be.false; // eslint-disable-line @typescript-eslint/no-unused-expressions
     if (isType(signinAction, signin)) {
       expect(signinAction.payload.name).to.equal("ulrik");
     } else {

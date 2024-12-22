@@ -2,7 +2,6 @@ import * as ReactRedux from "react-redux";
 import * as Redux from "redux";
 import * as ReduxThunk from "redux-thunk";
 import * as ReactReduxHistory from "../lib/react-redux-history";
-import * as ReduxHistory from "../lib/redux-history";
 import * as ReduxSaga from "../lib/redux-saga";
 
 import auth from "./auth";
