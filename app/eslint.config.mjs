@@ -18,6 +18,7 @@ export default [
     },
     rules: {
       'react-compiler/react-compiler': 'error',
+      "@typescript-eslint/no-unused-vars": ["error", { "ignoreRestSiblings": true }],
     },
   },
 ];

@@ -1,10 +1,15 @@
-import React from "react";
-import TestRenderer, { act, ReactTestRenderer } from "react-test-renderer";
+import React, { act } from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 import { connect, setupStore } from "../root";
 import { BrowserHistory, createBrowserHistory } from "history";
-import App, { homePath, peoplePath, profilePath, signinPath, tasksPath } from "./App";
+import App, {
+  homePath,
+  peoplePath,
+  profilePath,
+  signinPath,
+  tasksPath,
+} from "./App";
 import LoginForm from "./LoginForm";
 import Home from "./Home";
 import PeopleTable from "./People";
@@ -12,6 +17,7 @@ import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import TaskTable from "./Tasks";
 import Profile from "./Profile";
 import auth from "../store/auth";
+import { change, click, submit, TestRenderer } from "../lib/test-renderer";
 
 vi.hoisted(() => vi.stubGlobal("window", {}));
 vi.mock("history", () => ({
@@ -47,21 +53,13 @@ for (let i = 0; i < 1; ++i)
           vi.mocked(createBrowserHistory).mock.results[0].value;
 
         // When: rendered
-        let testRenderer: ReactTestRenderer;
-        await act(async () => {
-          testRenderer = TestRenderer.create(connect(<App />, store));
-        });
-        // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root } = testRenderer;
+        const renderer = await TestRenderer.create(connect(<App />, store));
 
         // Then: user is not logged in
         expect(store.getState().auth.user).toBeNull();
-        const signinButton = root.findByProps({ children: "Sign in" });
 
         // When: navigate to sign in
-        await act(async () => {
-          signinButton.props.onClick({ preventDefault: vi.fn() });
-        });
+        await click(renderer.findByText("Sign in"), { preventDefault: vi.fn() });
 
         // Then: navigation to Signin page
         expect(replace).toHaveBeenCalledWith(
@@ -79,53 +77,41 @@ for (let i = 0; i < 1; ++i)
           vi.mocked(createBrowserHistory).mock.results[0].value;
 
         // When: rendered
-        let testRenderer: ReactTestRenderer;
-        await act(async () => {
-          testRenderer = TestRenderer.create(connect(<App />, store));
-        });
-        // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root } = testRenderer;
+        const renderer = await TestRenderer.create(connect(<App />, store));
 
         // When: login with wrong password
-        const usernameInput = root.findByProps({ placeholder: "User name" });
-        await act(async () => {
-          usernameInput.props.onChange({ target: { value: "Lars" } });
+        await change(renderer.findByProps({ placeholder: "User name" }), {
+          target: { value: "Lars" },
         });
-        const passwordInput = root.findByProps({
+        const passwordInput = renderer.findByProps({
           placeholder: "Password (use 'p')",
         });
-        await act(async () => {
-          passwordInput.props.onChange({ target: { value: "w" } });
-        });
-        const form = root.findByType("form");
-        await act(async () => {
-          form.props.onSubmit({ preventDefault: vi.fn() });
-        });
+        await change(passwordInput, { target: { value: "w" } });
+        const form = renderer.findByType("form");
+        await submit(form, { preventDefault: vi.fn() });
 
         // Then: show loading indicator
-        root.findByProps({ children: "Authorizing..." });
+        renderer.findByText("Authorizing...");
 
         // Then: eventually show error message
         expect(vi.getTimerCount()).toBe(1); // Note: auth delay
         await act(async () => {
           await vi.runAllTimersAsync(); // Note: flush pending timers and promises
         });
-        root.findByProps({ children: "Error: Authorization failed" });
+        renderer.findByText("Error: Authorization failed");
 
         // When: login with correct password
-        await act(async () => {
-          passwordInput.props.onChange({ target: { value: "p" } });
-        });
-        await act(async () => {
-          form.props.onSubmit({ preventDefault: vi.fn() });
-        });
+        await change(passwordInput, { target: { value: "p" } });
+        await submit(form, { preventDefault: vi.fn() });
 
         // Then: show loading indicator
-        root.findByProps({ children: "Authorizing..." });
+        renderer.findByText("Authorizing...");
 
         // Then: eventually navigate to Home page
         expect(vi.getTimerCount()).toBe(1); // Note: auth delay
-        await vi.runAllTimersAsync(); // Note: flush pending timers and promises
+        await act(async () => {
+          await vi.runAllTimersAsync(); // Note: flush pending timers and promises
+        });
         expect(replace).toHaveBeenCalledWith(
           expect.objectContaining({ pathname: homePath })
         );
@@ -142,20 +128,14 @@ for (let i = 0; i < 1; ++i)
         const store = setupStore();
 
         // When: rendered
-        let testRenderer: ReactTestRenderer;
-        await act(async () => {
-          testRenderer = TestRenderer.create(connect(<App />, store));
-        });
-        // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root } = testRenderer;
+        const renderer = await TestRenderer.create(connect(<App />, store));
 
         // Then: eventually on people page
         await act(async () => {
           await vi.runAllTimersAsync(); // Note: flush pending timers and promises
         });
-        // console.log(JSON.stringify(toJSON(), null, 2));
-        root.findByProps({ children: "Add one more" });
-        root.findByProps({ children: "Edit Adam" });
+        expect(renderer.findByText("Add one more")).toBeDefined();
+        expect(renderer.findByText("Edit Adam")).toBeDefined();
 
         // Then: each row rendered only once (but counted twice when running under vite dev server, but not the bundle)
         expect(getRowRenderCount()).to.equal(4);
@@ -163,14 +143,12 @@ for (let i = 0; i < 1; ++i)
 
         // Then: number of selected people is 0
         expect(
-          root.findAllByProps({ type: "checkbox", checked: true })
-        ).toHaveLength(0);
+          renderer.findByProps({ type: "checkbox", checked: true })
+        ).not.toBeDefined();
 
         // When: select first person
-        await act(async () => {
-          root
-            .findAllByProps({ type: "checkbox" })[1]
-            .props.onChange({ target: { checked: true } }); // Note: skipping header checkbox
+        await change(renderer.findAllByProps({ type: "checkbox" })[1], {
+          target: { checked: true },
         });
 
         // Then: eventually number of selected people is 1
@@ -178,7 +156,7 @@ for (let i = 0; i < 1; ++i)
           await vi.runAllTimersAsync(); // Note: flush pending timers and promises
         });
         expect(
-          root.findAllByProps({ type: "checkbox", checked: true })
+          renderer.findAllByProps({ type: "checkbox", checked: true })
         ).toHaveLength(1);
 
         // Then: just that row is re-rendered
@@ -186,10 +164,8 @@ for (let i = 0; i < 1; ++i)
         resetRowRenderCount();
 
         // When: select all people
-        await act(async () => {
-          root
-            .findAllByProps({ type: "checkbox" })[0]
-            .props.onChange({ target: { checked: true } }); // Note: header checkbox
+        await change(renderer.findAllByProps({ type: "checkbox" })[0], {
+          target: { checked: true },
         });
 
         // Then: number of selected people is 4
@@ -197,7 +173,7 @@ for (let i = 0; i < 1; ++i)
           await vi.runAllTimersAsync(); // Note: flush pending timers and promises
         });
         expect(
-          root.findAllByProps({ type: "checkbox", checked: true })
+          renderer.findAllByProps({ type: "checkbox", checked: true })
         ).toHaveLength(5); // Note: including header checkbox
 
         // Then: all rows are re-rendered
@@ -205,42 +181,32 @@ for (let i = 0; i < 1; ++i)
         resetRowRenderCount();
 
         // When: click first edit button
-        await act(async () => {
-          root.findByProps({ children: "Edit Adam" }).props.onClick();
-        });
+        await click(renderer.findByText("Edit Adam"));
 
         // Then: see edit form
-        const saveButton = root.findByProps({ children: "Save name" });
+        const saveButton = renderer.findByText("Save name");
 
         // When: change name and click save
-        await act(async () => {
-          root
-            .findByProps({ placeholder: "name" })
-            .props.onChange({ target: { value: "AdamX" } });
+        await change(renderer.findByProps({ placeholder: "name" }), {
+          target: { value: "AdamX" },
         });
-        await act(async () => {
-          saveButton.props.onClick();
-        });
+        await click(saveButton);
 
         // When: click close
-        await act(async () => {
-          root.findByProps({ children: "Close AdamX" }).props.onClick();
-        });
+        await click(renderer.findByText("Close AdamX"));
 
         // Then: see updated name
-        root.findByProps({ children: "Edit AdamX" });
+        expect(renderer.findByText("Edit AdamX")).toBeDefined();
 
         // Then: only that row was re-rendered
         expect(getRowRenderCount()).to.equal(1);
         resetRowRenderCount();
 
         // When: add new person
-        await act(async () => {
-          root.findByProps({ children: "Add one more" }).props.onClick();
-        });
+        await click(renderer.findByText("Add one more"));
 
         // Then: see added person
-        root.findByProps({ children: "Edit Unnamed" });
+        expect(renderer.findByText("Edit Unnamed")).toBeDefined();
 
         // Then: only all rows are re-rendered
         // TODO: avoid re-rendering all rows including the new one
@@ -255,29 +221,23 @@ for (let i = 0; i < 1; ++i)
         mockLocation(tasksPath);
         const store = setupStore();
 
-        // When: rendered
-        let testRenderer: ReactTestRenderer;
-        await act(async () => {
-          testRenderer = TestRenderer.create(connect(<App />, store));
-        });
-        // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root } = testRenderer;
+        const renderer = await TestRenderer.create(connect(<App />, store));
 
         // Then: eventually on task page
-        await vi.runAllTimersAsync(); // Note: flush pending timers and promises
-        const editButton = root.findByProps({ children: "Edit" });
+        await act(async () => {
+          await vi.runAllTimersAsync(); // Note: flush pending timers and promises
+        });
+        const editButton = renderer.findByText("Edit");
 
         // Then: each row rendered only once
         expect(getRowRenderCount()).to.equal(4);
         resetRowRenderCount();
 
         // When: click edit button
-        await act(async () => {
-          editButton.props.onClick();
-        });
+        await click(editButton);
 
         // Then: see edit form
-        const saveButton = root.findByProps({ children: "Save" });
+        const saveButton = renderer.findByText("Save");
 
         // Then: each row rendered only once
         expect(getRowRenderCount()).to.equal(4);
@@ -285,12 +245,10 @@ for (let i = 0; i < 1; ++i)
 
         // When: change name and click save
         expect(
-          root.findAllByProps({ placeholder: "title" })[2].props.value
+          renderer.findAllByProps({ placeholder: "title" })[2].props.value
         ).toBe("Swim");
-        await act(async () => {
-          root
-            .findAllByProps({ placeholder: "title" })[2]
-            .props.onChange({ target: { value: "Swimming" } });
+        await change(renderer.findAllByProps({ placeholder: "title" })[2], {
+          target: { value: "Swimming" },
         });
 
         // Then: only that row was re-rendered
@@ -298,7 +256,7 @@ for (let i = 0; i < 1; ++i)
         resetRowRenderCount();
 
         // When: click save button
-        saveButton.props.onClick();
+        await click(saveButton);
 
         // Then: data is saved
         expect(store.getState().task[1].title).toBe("Swimming");
@@ -310,25 +268,20 @@ for (let i = 0; i < 1; ++i)
         // Given: setup
         mockLocation(profilePath);
         const store = setupStore();
-        store.dispatch(auth.actions.signin({ user: { name: 'Peter' } }));
+        store.dispatch(auth.actions.signin({ user: { name: "Peter" } }));
         const { replace } =
           vi.mocked(createBrowserHistory).mock.results[0].value;
 
-        // When: rendered
-        let testRenderer: ReactTestRenderer;
-        await act(async () => {
-          testRenderer = TestRenderer.create(connect(<App />, store));
-        });
-        // @ts-expect-error TS2454: Variable 'testRenderer' is used before being assigned.
-        const { root } = testRenderer;
+        const renderer = await TestRenderer.create(connect(<App />, store));
+        // console.log(JSON.stringify(renderer.root, null, 2));
 
         // Then: is on profile page
         await vi.runAllTimersAsync(); // Note: flush pending timers and promises
-        root.findByProps({ children: "Peter" });
-        const logoutButton = root.findByProps({ children: "Logout" });
+        renderer.findByText("Peter");
+        const logoutButton = renderer.findByText("Logout");
 
         // When: logout
-        logoutButton.props.onClick();
+        await click(logoutButton);
 
         // Then: eventually navigate to Home page
         await vi.runAllTimersAsync(); // Note: flush pending timers and promises
