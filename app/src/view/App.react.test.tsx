@@ -17,7 +17,7 @@ import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import TaskTable from "./Tasks";
 import Profile from "./Profile";
 import auth from "../store/auth";
-import { change, click, submit, TestRenderer } from "../lib/test-renderer";
+import { change, click, submit, TestRenderer } from "@larsthorup/react-test-renderer";
 
 vi.hoisted(() => vi.stubGlobal("window", {}));
 vi.mock("history", () => ({
