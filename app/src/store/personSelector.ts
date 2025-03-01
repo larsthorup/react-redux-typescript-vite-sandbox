@@ -1,12 +1,11 @@
 import * as R from "ramda";
 import { createSelector } from "reselect";
-import { createObjectSelector } from "reselect-map";
+import { shallowEqual } from "react-redux";
 import { RootState, Selector, useSelector } from ".";
-import cacheResultOf from "../lib/cacheResultOf";
 import { TableSortOrder } from "../lib/react-table";
 import { Person } from "./person";
 
-const selectPeopleIdUncached = createSelector(
+export const selectPeopleId = createSelector(
   (state: RootState) => state.person,
   (_: RootState, { sortOrder }: { sortOrder: TableSortOrder }) => sortOrder,
   (personSet, sortOrder) => {
@@ -21,10 +20,14 @@ const selectPeopleIdUncached = createSelector(
         ? personListSorted
         : personListSorted.reverse();
     return personList.map((p) => p.id);
+  },
+  { 
+    memoizeOptions: {
+      // Note: return same array if equal
+      resultEqualityCheck: shallowEqual,
+    },
   }
 );
-// TODO as Selector<string[]>
-export const selectPeopleId = cacheResultOf(selectPeopleIdUncached);
 
 const ageOf = (date: string) => {
   // console.log(date);
@@ -37,16 +40,18 @@ export type PersonInfo = Person & {
   age: number;
 };
 
-export const selectPeople = createObjectSelector(
-  (state: RootState) => state.person,
+export const selectPeople = (state: RootState) => state.person;
+
+export const selectPersonInfo: Selector<PersonInfo, string> = createSelector(
+  (state: RootState, id: string) => state.person[id],
   (person) => {
-    // console.log('selectPeople', person);
+    // console.log('selectPersonInfo', person);
     return {
       ...person,
       age: ageOf(person.birthDate),
     };
   }
-) as unknown as Selector<{ [id: string]: PersonInfo }>; // TODO: fix type of createObjectSelector
+)
 
 export const selectPersonSummary: Selector<PersonInfo> = createSelector(
   selectPeople,
@@ -57,13 +62,13 @@ export const selectPersonSummary: Selector<PersonInfo> = createSelector(
       name: "",
       birthDate: "",
       age:
-        idList.reduce((sum, id) => sum + personSet[id].age, 0) / idList.length,
+        idList.reduce((sum, id) => sum + ageOf(personSet[id].birthDate), 0) / idList.length,
     };
   }
 );
 
-export function usePerson(id: string) {
-  return useSelector((state) => selectPeople(state)[id]);
+export function usePersonInfo(id: string) {
+  return useSelector((state) => selectPersonInfo(state, id));
 }
 
 export function usePersonSummary() {

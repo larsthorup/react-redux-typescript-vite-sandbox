@@ -15,9 +15,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "paths": {
-      "reselect-map": ["./src/lib/reselect-map"]
-    }
   },
   "include": ["./src"]
 }

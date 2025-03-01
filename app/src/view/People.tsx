@@ -12,7 +12,7 @@ import { Person, default as person, default as personSlice } from "../store/pers
 import {
   PersonInfo,
   selectPeopleId,
-  usePerson,
+  usePersonInfo,
   useIsPersonSelected,
   usePersonSummary,
 } from "../store/personSelector";
@@ -65,7 +65,7 @@ const PeopleTable: React.FC = () => {
     label: (id, i, person) => person.name,
     onSelected: (id, selected) => 
       dispatch(person.actions.selectPerson({ id, selected })),
-    useData: usePerson, // eslint-disable-line react-compiler/react-compiler
+    useData: usePersonInfo, // eslint-disable-line react-compiler/react-compiler
     useDataSummary: usePersonSummary, // eslint-disable-line react-compiler/react-compiler
     useSelected: useIsPersonSelected, // eslint-disable-line react-compiler/react-compiler
   };

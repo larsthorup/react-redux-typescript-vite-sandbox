@@ -13,7 +13,7 @@ import {
   TaskInfo,
   selectTaskIdList,
   useIsTaskSelected,
-  useTask,
+  useTaskInfo,
   useTaskSummary,
 } from "../store/taskSelector";
 
@@ -57,7 +57,7 @@ const TaskTable: React.FC = () => {
     label: (id, i, person) => person.title,
     onSelected: (id, selected) =>
       dispatch(task.actions.selectTask({ id, selected })),
-    useData: useTask, // eslint-disable-line react-compiler/react-compiler
+    useData: useTaskInfo, // eslint-disable-line react-compiler/react-compiler
     useDataSummary: useTaskSummary, // eslint-disable-line react-compiler/react-compiler
     useSelected: useIsTaskSelected, // eslint-disable-line react-compiler/react-compiler
   };

@@ -34,8 +34,7 @@
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "reselect": "^4.0.0",
-    "reselect-map": "^1.0.6",
+    "reselect": "^5.1.1",
     "ts-essentials": "^10.0.4"
   },
   "devDependencies": {

@@ -17,7 +17,10 @@ export const rootReducer = Redux.combineReducers({
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
-export type Selector<T> = (state: RootState) => T;
+export type Selector<TResult, TProps = void> = (
+  state: RootState,
+  props: TProps
+) => TResult;
 export type Saga<TArg = void> = ReduxSaga.Saga<RootState, TArg, void>;
 export type Dispatch = ReduxThunk.ThunkDispatch<
   RootState,

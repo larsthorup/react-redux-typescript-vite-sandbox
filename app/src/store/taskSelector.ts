@@ -1,12 +1,10 @@
 import * as R from "ramda";
 import { createSelector } from "reselect";
-import { createObjectSelector } from "reselect-map";
 import { RootState, Selector, useSelector } from ".";
-import cacheResultOf from "../lib/cacheResultOf";
 import { TableSortOrder } from "../lib/react-table";
 import { Task } from "./task";
 
-const selectTaskIdListUncached = createSelector(
+export const selectTaskIdList = createSelector(
   (state: RootState) => state.task,
   (_: RootState, { sortOrder }: { sortOrder: TableSortOrder }) => sortOrder,
   (taskSet, sortOrder) => {
@@ -18,9 +16,14 @@ const selectTaskIdListUncached = createSelector(
     const taskList =
       sortOrder.direction === "asc" ? taskListSorted : taskListSorted.reverse();
     return taskList.map((p) => p.id);
+  },
+  {
+    memoizeOptions: {
+      // Note: return same array if equal
+      resultEqualityCheck: R.equals,
+    },
   }
 );
-export const selectTaskIdList = cacheResultOf(selectTaskIdListUncached);
 
 const ageOf = (date: string) => {
   return Math.trunc((Date.now() - Date.parse(date)) / (24 * 60 * 60 * 1000));
@@ -30,15 +33,17 @@ export type TaskInfo = Task & {
   age: number;
 };
 
-export const selectTasks = createObjectSelector(
-  (state: RootState) => state.task,
+export const selectTasks = (state: RootState) => state.task;
+
+export const selectTaskInfo = createSelector(
+  (state: RootState, id: string) => state.task[id],
   (task) => {
     return {
       ...task,
       age: ageOf(task.dueDate),
     };
   }
-) as unknown as Selector<{ [id: string]: TaskInfo }>; // TODO: fix type of createObjectSelector
+)
 
 export const selectTaskSummary: Selector<TaskInfo> = createSelector(
   selectTasks,
@@ -48,13 +53,13 @@ export const selectTaskSummary: Selector<TaskInfo> = createSelector(
       id: "",
       title: "",
       dueDate: "",
-      age: idList.reduce((sum, id) => sum + taskSet[id].age, 0) / idList.length,
+      age: idList.reduce((sum, id) => sum + ageOf(taskSet[id].dueDate), 0) / idList.length,
     };
   }
 );
 
-export function useTask(id: string) {
-  return useSelector((state) => selectTasks(state)[id]);
+export function useTaskInfo(id: string) {
+  return useSelector((state) => selectTaskInfo(state, id));
 }
 
 export function useTaskSummary() {
