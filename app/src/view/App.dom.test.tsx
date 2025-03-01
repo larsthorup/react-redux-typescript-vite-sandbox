@@ -3,14 +3,8 @@ import userEvent from "@testing-library/user-event";
 
 import { expect } from "chai";
 
-import { getRowRenderCount as getRowRenderCountReal, resetRowRenderCount } from "../lib/react-table";
+import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
 import { createRootElement } from "../root";
-
-function getRowRenderCount() {
-  const rowRenderCount = getRowRenderCountReal();
-  console.log({ rowRenderCount });
-  return rowRenderCount;
-}
 
 describe("App (in DOM)", function () {
   if (this) this.timeout(5000); // Note: only for Mocha
@@ -83,8 +77,7 @@ describe("App (in DOM)", function () {
     ).to.have.length(1);
 
     // Then: just that row is re-rendered
-    // TODO: fix this!
-    getRowRenderCount(); // expect(getRowRenderCount()).to.equal(1);
+    expect(getRowRenderCount()).to.equal(1);
     resetRowRenderCount();
 
     // When: select all people
