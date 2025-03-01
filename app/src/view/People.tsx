@@ -18,6 +18,12 @@ import {
 } from "../store/personSelector";
 import TextField from "./TextField";
 
+let prev: unknown = undefined;
+const log = (x: unknown) => {
+  console.log(x === prev, x);
+  prev = x;
+};
+
 const PeopleTable: React.FC = () => {
   const dispatch = useDispatch();
   const [sortOrder, setSortOrder] = useState({
@@ -27,6 +33,7 @@ const PeopleTable: React.FC = () => {
   const personIdList = useSelector((state) =>
     selectPeopleId(state, { sortOrder })
   );
+  log(personIdList)
   const { isRunning, isCompleted } = useAsyncEffect(async () => {
     // Note: simulate server delay
     await new Promise((resolve) => setTimeout(resolve, 10));

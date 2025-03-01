@@ -83,7 +83,8 @@ describe("App (in DOM)", function () {
     ).to.have.length(1);
 
     // Then: just that row is re-rendered
-    // expect(getRowRenderCount()).to.equal(1);
+    // TODO: fix this!
+    getRowRenderCount(); // expect(getRowRenderCount()).to.equal(1);
     resetRowRenderCount();
 
     // When: select all people
