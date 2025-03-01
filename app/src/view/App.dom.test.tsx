@@ -3,8 +3,14 @@ import userEvent from "@testing-library/user-event";
 
 import { expect } from "chai";
 
-import { getRowRenderCount, resetRowRenderCount } from "../lib/react-table";
+import { getRowRenderCount as getRowRenderCountReal, resetRowRenderCount } from "../lib/react-table";
 import { createRootElement } from "../root";
+
+function getRowRenderCount() {
+  const rowRenderCount = getRowRenderCountReal();
+  console.log({ rowRenderCount });
+  return rowRenderCount;
+}
 
 describe("App (in DOM)", function () {
   if (this) this.timeout(5000); // Note: only for Mocha
