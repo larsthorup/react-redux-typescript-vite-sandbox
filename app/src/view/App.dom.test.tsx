@@ -62,6 +62,7 @@ describe("App (in DOM)", function () {
     // Then: each row rendered only once (but counted twice when running under vite dev server, but not the bundle)
     expect(getRowRenderCount()).to.equal(4);
     resetRowRenderCount();
+    expect(getRowRenderCount()).to.equal(0);
 
     // Then: number of selected people is 0
     expect(
@@ -71,6 +72,7 @@ describe("App (in DOM)", function () {
     ).to.have.length(0);
 
     // When: select first person
+    expect(getRowRenderCount()).to.equal(0);
     await userEvent.click(screen.getAllByRole("checkbox")[1]); // Note: skipping header checkbox
 
     // Then: number of selected people is 1
