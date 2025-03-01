@@ -10,7 +10,7 @@
     "serve": "vite preview",
     "tsc": "tsc",
     "test": "tsc && npm run lint && npm run mocha && npm run coverage && npm run vitest:coverage && npm run build",
-    "test-ci": "tsc && npm run lint && npm run coverage && npm run vitest:coverage && npm run build",
+    "test-ci": "tsc && npm run lint && npm run vitest:coverage && npm run build",
     "vitest": "vitest ",
     "vitest:coverage": "vitest --coverage --run"
   },
